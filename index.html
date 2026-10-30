@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Menu de Perfumes</title>
+<meta name="description" content="Seleção de perfumes com preço especial. Chama no WhatsApp pra reservar.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Menu de Perfumes">
+<meta property="og:description" content="Seleção com preço especial. Chama no WhatsApp pra reservar.">
+<meta property="og:image" content="https://fernandollima-hub.github.io/menu-perfumes/img/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://fernandollima-hub.github.io/menu-perfumes/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2321101A'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' text-anchor='middle' fill='%23F0E0C2'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    /* fundo: berinjela / vinho-escuro, nunca preto puro */
+    --bg-deep: #170A11;
+    --bg: #21101A;
+    --bg-glow: #3A1929;
+    --panel: #29131F;
+    --panel-hi: #351B2A;
+
+    /* tipografia champanhe / ouro */
+    --champagne: #F0E0C2;
+    --gold: #D6B47C;
+    --gold-bright: #F2D69E;
+    --gold-dim: #9E805B;
+    --gold-faint: rgba(214, 180, 124, 0.30);
+    --gold-ghost: rgba(214, 180, 124, 0.14);
+    --muted: #C7AF99;
+    --muted-2: #B39C8B;
+
+    /* moldura porcelana */
+    --porcelain: #F7F2EF;
+    --porcelain-edge: rgba(120, 84, 70, 0.16);
+    --porcelain-shade: rgba(120, 84, 70, 0.10);
+
+    /* selo */
+    --seal-hi: #F6DDA8;
+    --seal: #D2AE72;
+    --seal-lo: #A9864F;
+    --seal-ink: #2A111D;
+
+    --shadow: rgba(10, 3, 7, 0.60);
+
+    /* verde oficial do WhatsApp, só no ícone do rodapé */
+    --wa: #25D366;
+    --wa-ink: #07361C;
+    /* rosa do cartão Flash, só na etiqueta de pagamento */
+    --flash: #D50E5D;
+    --flash-ink: #FFFFFF;
+
+    --fw: 132px;           /* largura da moldura (com o respiro do filete) */
+    --gap: 22px;           /* espaço moldura -> texto */
+    --display: "Bodoni Moda", "Bodoni 72", "Didot", "Bodoni MT", Georgia, serif;
+    --sans: "Jost", "Futura", "Century Gothic", "Segoe UI", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--bg-deep); }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--bg-deep);
+    background-image:
+      radial-gradient(110% 40% at 50% 0%, var(--bg-glow) 0%, transparent 70%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+    color: var(--champagne);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page {
+    max-width: 572px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 14px;
+  }
+
+  /* ---------- a carta ---------- */
+  .carta {
+    position: relative;
+    background-color: var(--panel);
+    background-image: radial-gradient(90% 22% at 50% 0%, var(--panel-hi) 0%, transparent 100%);
+    border: 1px solid var(--gold-dim);
+    padding: 24px 26px 20px;
+  }
+  .carta::before {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border: 1px solid var(--gold-faint);
+    pointer-events: none;
+  }
+
+  /* ---------- cabeçalho ---------- */
+  .head { text-align: center; padding-bottom: 6px; }
+  .head h1 {
+    margin: 0;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .h1-a {
+    display: block;
+    font-family: var(--display);
+    font-size: 64px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 0.92;
+    color: var(--champagne);
+  }
+  .h1-b {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 25px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: var(--gold);
+  }
+  .sub {
+    margin: 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .sub span { margin-right: -0.24em; }
+  .sub::before, .sub::after {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: var(--gold-dim);
+    flex: none;
+  }
+
+  /* ---------- seções ---------- */
+  .sec-t {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 18px 0 14px;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .sec-t span { margin-right: -0.34em; }
+  .sec-t::before, .sec-t::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+  }
+  .sec-t::before { background: linear-gradient(to right, transparent, var(--gold-dim)); }
+  .sec-t::after  { background: linear-gradient(to left,  transparent, var(--gold-dim)); }
+
+  /* ---------- item ---------- */
+  .item {
+    display: grid;
+    grid-template-columns: var(--fw) minmax(0, 1fr);
+    column-gap: var(--gap);
+    align-items: center;
+  }
+  .item + .item {
+    margin-top: 12px;
+    padding-top: 15px;
+    border-top: 1px solid var(--gold-ghost);
+  }
+
+  .frame-wrap { position: relative; padding: 5px; }
+
+  .frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 20 / 23;
+    background: var(--porcelain);
+    border-radius: calc((var(--fw) - 10px) / 2) calc((var(--fw) - 10px) / 2) 3px 3px;
+    outline: 1px solid var(--gold-dim);
+    outline-offset: 4px;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: 0 14px 22px -14px var(--shadow);
+  }
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+      inset 0 0 0 1px var(--porcelain-edge),
+      inset 0 -24px 26px -24px var(--porcelain-shade);
+    pointer-events: none;
+    z-index: 2;
+  }
+  /* enquadramento por foto: --w (largura, % da moldura), --l (esquerda) e --b (base) */
+  .frame img {
+    position: absolute;
+    display: block;
+    width: var(--w, 100%);
+    max-width: none;
+    height: auto;
+    left: var(--l, 0%);
+    bottom: var(--b, 0%);
+    mix-blend-mode: multiply;   /* some com o fundo claro da foto na porcelana */
+  }
+  /* correção de branco só nas fotos de fundo cinza/bege (as de fundo branco ficam intactas) */
+  .frame img.wb-million { filter: url(#wb-million); }
+  .frame img.wb-212     { filter: url(#wb-212); }
+  .frame img.wb-ch      { filter: url(#wb-ch); }
+
+  .seal {
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 34% 28%, var(--seal-hi) 0%, var(--seal) 48%, var(--seal-lo) 100%);
+    color: var(--seal-ink);
+    box-shadow: 0 0 0 3px var(--panel), 0 0 0 4px var(--gold-dim), 0 8px 16px -6px var(--shadow);
+    z-index: 3;
+  }
+  .seal b {
+    display: flex;
+    align-items: baseline;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1;
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" 18;
+    font-variant-numeric: lining-nums tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .seal b em {
+    font-family: var(--sans);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    margin-left: 1px;
+  }
+  .seal span {
+    margin-top: 2px;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    margin-right: -0.14em;
+  }
+
+  .info { min-width: 0; }
+  .brand {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .brand .vol {
+    white-space: nowrap;
+    text-transform: none;
+    letter-spacing: 0.06em;
+  }
+  .brand .sep {
+    display: inline-block;
+    width: 4px; height: 4px;
+    margin: 0 8px 0 4px;
+    vertical-align: middle;
+    background: var(--gold-dim);
+    transform: rotate(45deg) translateY(-1px);
+  }
+  .name {
+    margin: 5px 0 0;
+    font-family: var(--display);
+    /* 22px a 540; encolhe um pouco entre 461 e 539px pra o nome mais longo nao quebrar */
+    font-size: clamp(19px, calc(22px - (540px - 100vw) * 0.06), 22px);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: 0;
+    color: var(--champagne);
+    text-wrap: balance;
+  }
+  /* condição do item (ex.: sem caixa / conteúdo parcial) */
+  .cond {
+    margin: 8px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .cond span {
+    padding: 4px 8px 3px;
+    border: 1px solid var(--gold-dim);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    white-space: nowrap;
+  }
+  /* bloco de preço: de / por / economize empilhados à direita */
+  .de {
+    margin: 7px 0 0;
+    text-align: right;
+    font-size: 16px;
+    line-height: 1.25;
+    color: var(--muted);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .de i {
+    font-family: var(--display);
+    font-size: 16px;
+    margin-right: 1px;
+  }
+  .de s {
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: var(--muted);
+  }
+  .por {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+  }
+  .por i {
+    font-family: var(--display);
+    font-size: 19px;
+    color: var(--gold);
+    flex: none;
+  }
+  .lead {
+    flex: 1 1 auto;
+    min-width: 12px;
+    height: 4px;
+    margin: 0 8px;
+    position: relative;
+    top: -3px;
+    background-image: radial-gradient(circle at 2px 2px, var(--gold-dim) 1.1px, transparent 1.7px);
+    background-size: 7px 4px;
+    background-repeat: repeat-x;
+    background-position: right center;
+  }
+  .price {
+    flex: none;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--gold-bright);
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" 24;
+    font-variant-numeric: lining-nums tabular-nums;
+    white-space: nowrap;
+  }
+  .price .cur {
+    font-size: 0.42em;
+    font-weight: 500;
+    margin-right: 0.12em;
+    letter-spacing: 0.02em;
+    color: var(--gold);
+  }
+  .save {
+    margin: 5px 0 0;
+    text-align: right;
+    font-size: 15.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--gold-bright);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+  .save span {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 7px;
+  }
+
+  /* ---------- rodapé ---------- */
+  .foot {
+    margin-top: 22px;
+    text-align: center;
+  }
+  .cta-box {
+    position: relative;
+    padding: 15px 18px 14px;
+    background-color: var(--panel-hi);
+    background-image: radial-gradient(80% 120% at 50% 0%, var(--bg-glow) 0%, transparent 100%);
+    border: 1px solid var(--gold-dim);
+  }
+  .cta-box::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--gold-faint);
+    pointer-events: none;
+  }
+  .cta {
+    position: relative;
+    margin: 0;
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 25px;
+    line-height: 1.2;
+    color: var(--gold-bright);
+    text-wrap: balance;
+  }
+  .wa-link {
+    position: relative;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .wa-link:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 6px; }
+  .wa-icon {
+    display: block;
+    width: 60px;
+    height: 60px;
+    flex: none;
+    color: var(--wa);
+  }
+  .wa-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex: none;
+  }
+  /* botão "Clique aqui": aparece no HTML e no PDF; o PNG é gerado sem ele (imagem não tem clique) */
+  .wa-btn {
+    display: block;
+    padding: 9px 18px 8px;
+    border-radius: 999px;
+    background: var(--wa);
+    color: var(--wa-ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    box-shadow: 0 8px 16px -8px var(--shadow);
+  }
+  .qr-tile {
+    display: block;
+    width: 132px;
+    flex: none;
+    background: var(--porcelain);
+    color: var(--seal-ink);
+    border-radius: 3px;
+    outline: 1px solid var(--gold-dim);
+    outline-offset: 4px;
+  }
+  .qr-svg { display: block; width: 100%; height: auto; }
+  /* forma de pagamento */
+  .pay {
+    position: relative;
+    margin: 18px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--gold-ghost);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 10px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--champagne);
+  }
+  .pay-icon { width: 24px; height: 24px; flex: none; color: var(--gold); }
+  .flash {
+    padding: 5px 12px 4px;
+    border-radius: 999px;
+    background: var(--flash);
+    color: var(--flash-ink);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .fine {
+    margin: 10px 0 0;
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    line-height: 1.45;
+    color: var(--muted-2);
+    text-wrap: balance;
+  }
+
+  /* ---------- tela larga: só mais respiro em volta ---------- */
+  @media (min-width: 700px) {
+    .page { padding-block: 40px; }
+  }
+
+  /* ---------- celular ---------- */
+  @media (max-width: 460px) {
+    :root { --fw: 104px; --gap: 14px; }
+    .carta { padding: 22px 16px 18px; }
+    .carta::before { inset: 5px; }
+    .h1-a { font-size: 56px; }
+    .h1-b { font-size: 22px; }
+    .sub { font-size: 12px; letter-spacing: 0.14em; gap: 10px; }
+    .sub span { margin-right: -0.14em; }
+    .sub::before, .sub::after { width: 14px; }
+    .sec-t { margin: 18px 0 14px; gap: 12px; font-size: 13px; letter-spacing: 0.3em; }
+    .sec-t span { margin-right: -0.3em; }
+    .item + .item { margin-top: 12px; padding-top: 14px; }
+    .seal { width: 44px; height: 44px; right: -2px; top: -8px; }
+    .seal b { font-size: 16px; }
+    .seal b em { font-size: 12px; margin-left: 0; }
+    .seal span { font-size: 12px; letter-spacing: 0.08em; margin-right: -0.08em; margin-top: 1px; }
+    .brand { font-size: 12px; letter-spacing: 0.06em; }
+    .brand .sep { margin: 0 5px 0 3px; }
+    .name { font-size: 20px; margin-top: 4px; }
+    .de { margin-top: 5px; font-size: 14.5px; }
+    .de i { font-size: 15px; margin-right: 0; }
+    .por i { font-size: 17px; }
+    .lead { margin: 0 6px; }
+    .price { font-size: 32px; }
+    .save { font-size: 14px; margin-top: 3px; }
+    .save span { letter-spacing: 0.1em; margin-right: 5px; }
+    .foot { margin-top: 18px; }
+    .cta-box { padding: 13px 12px 12px; }
+    .cta { font-size: 21px; }
+    .wa-link { gap: 16px; margin-top: 12px; }
+    .wa-icon { width: 52px; height: 52px; }
+    .qr-tile { width: 116px; }
+    .wa-side { gap: 10px; }
+    .wa-btn { font-size: 15px; padding: 8px 14px 7px; }
+    .pay { font-size: 14.5px; margin-top: 16px; padding-top: 12px; }
+  }
+  @media (max-width: 370px) {
+    .price { font-size: 29px; }
+  }
+  @media (max-width: 350px) {
+    .price { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+<!-- correção de branco por canal: leva o fundo cinza/bege da foto a branco puro, sem estourar a cor do produto -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="wb-million" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="1.055 0 0 0 0  0 1.055 0 0 0  0 0 1.055 0 0  0 0 0 1 0"/>
+  </filter>
+  <filter id="wb-212" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="1.056 0 0 0 0  0 1.078 0 0 0  0 0 1.096 0 0  0 0 0 1 0"/>
+  </filter>
+  <filter id="wb-ch" color-interpolation-filters="sRGB">
+    <feColorMatrix type="matrix" values="1.03 0 0 0 0  0 1.03 0 0 0  0 0 1.03 0 0  0 0 0 1 0"/>
+  </filter>
+</svg>
+<main class="page">
+  <div class="carta">
+
+    <header class="head">
+      <h1><span class="h1-a">Menu</span><span class="h1-b">de Perfumes</span></h1>
+      <p class="sub"><span>Seleção com preço especial</span></p>
+    </header>
+
+    <section>
+      <h2 class="sec-t"><span>Masculino</span></h2>
+
+      <article class="item">
+        <div class="frame-wrap">
+          <div class="frame">
+            <img class="wb-million" src="img/million-gold.png" alt="One Million Gold Elixir" style="--w:129.1%; --l:-14.75%; --b:-8.9%">
+          </div>
+          <div class="seal"><b>28<em>%</em></b><span>OFF</span></div>
+        </div>
+        <div class="info">
+          <p class="brand">Rabanne<span class="sep"></span><span class="vol">50 ml</span></p>
+          <h3 class="name">One Million Gold Elixir</h3>
+          <p class="de"><i>de</i> <s>R$ 769,90</s></p>
+          <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>549,90</span></p>
+          <p class="save"><span>Economize</span>R$ 220,00</p>
+        </div>
+      </article>
+    </section>
+
+    <section>
+      <h2 class="sec-t"><span>Feminino</span></h2>
+
+      <article class="item">
+        <div class="frame-wrap">
+          <div class="frame">
+            <img class="wb-212" src="img/212-vip-rose.png" alt="212 VIP Rosé" style="--w:82.4%; --l:8.39%; --b:4.1%">
+          </div>
+          <div class="seal"><b>38<em>%</em></b><span>OFF</span></div>
+        </div>
+        <div class="info">
+          <p class="brand">Carolina Herrera<span class="sep"></span><span class="vol">30 ml</span></p>
+          <h3 class="name">212 VIP Rosé</h3>
+          <p class="de"><i>de</i> <s>R$ 489,00</s></p>
+          <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>300,00</span></p>
+          <p class="save"><span>Economize</span>R$ 189,00</p>
+        </div>
+      </article>
+
+      <article class="item">
+        <div class="frame-wrap">
+          <div class="frame">
+            <!-- a caixa vem cortada na borda de baixo do arquivo: foto rente à base da moldura -->
+            <img src="img/la-vie-est-belle.png" alt="La Vie Est Belle L’Elixir" style="--w:81.2%; --l:7.42%; --b:0%">
+          </div>
+          <div class="seal"><b>33<em>%</em></b><span>OFF</span></div>
+        </div>
+        <div class="info">
+          <p class="brand">Lancôme<span class="sep"></span><span class="vol">30 ml</span></p>
+          <h3 class="name">La Vie Est Belle L’Elixir</h3>
+          <p class="de"><i>de</i> <s>R$ 598,00</s></p>
+          <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>398,00</span></p>
+          <p class="save"><span>Economize</span>R$ 200,00</p>
+        </div>
+      </article>
+
+      <article class="item">
+        <div class="frame-wrap">
+          <div class="frame">
+            <img class="wb-ch" src="img/ch.png" alt="CH Carolina Herrera" style="--w:100%; --l:2%; --b:10%">
+          </div>
+          <div class="seal"><b>30<em>%</em></b><span>OFF</span></div>
+        </div>
+        <div class="info">
+          <p class="brand">Carolina Herrera<span class="sep"></span><span class="vol">30 ml</span></p>
+          <h3 class="name">CH</h3>
+          <p class="de"><i>de</i> <s>R$ 499,00</s></p>
+          <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>349,00</span></p>
+          <p class="save"><span>Economize</span>R$ 150,00</p>
+        </div>
+      </article>
+    </section>
+
+
+    <footer class="foot">
+      <div class="cta-box">
+        <p class="cta">Pra reservar o seu, é só me chamar.</p>
+        <a class="wa-link" href="https://wa.me/5551993467804?text=oii%2C%20tenho%20interesse%20nos%20perfumes%2C%20quais%20est%C3%A3o%20dispon%C3%ADveis%3F" target="_blank" rel="noopener" aria-label="Chamar no WhatsApp">
+          <span class="wa-side">
+          <svg class="wa-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            <span class="wa-btn">Clique aqui</span>
+          </span>
+          <span class="qr-tile"><svg class="qr-svg" viewBox="0 0 49 49" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM15 4h1v1h-1zM20 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM33 4h1v1h-1zM35 4h1v1h-1zM38 4h1v1h-1zM39 4h1v1h-1zM40 4h1v1h-1zM41 4h1v1h-1zM42 4h1v1h-1zM43 4h1v1h-1zM44 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM30 5h1v1h-1zM32 5h1v1h-1zM33 5h1v1h-1zM38 5h1v1h-1zM44 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM27 6h1v1h-1zM29 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM34 6h1v1h-1zM35 6h1v1h-1zM38 6h1v1h-1zM40 6h1v1h-1zM41 6h1v1h-1zM42 6h1v1h-1zM44 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM13 7h1v1h-1zM16 7h1v1h-1zM19 7h1v1h-1zM21 7h1v1h-1zM24 7h1v1h-1zM26 7h1v1h-1zM29 7h1v1h-1zM32 7h1v1h-1zM33 7h1v1h-1zM38 7h1v1h-1zM40 7h1v1h-1zM41 7h1v1h-1zM42 7h1v1h-1zM44 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM14 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM34 8h1v1h-1zM35 8h1v1h-1zM38 8h1v1h-1zM40 8h1v1h-1zM41 8h1v1h-1zM42 8h1v1h-1zM44 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM14 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM26 9h1v1h-1zM28 9h1v1h-1zM29 9h1v1h-1zM30 9h1v1h-1zM35 9h1v1h-1zM36 9h1v1h-1zM38 9h1v1h-1zM44 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM34 10h1v1h-1zM36 10h1v1h-1zM38 10h1v1h-1zM39 10h1v1h-1zM40 10h1v1h-1zM41 10h1v1h-1zM42 10h1v1h-1zM43 10h1v1h-1zM44 10h1v1h-1zM13 11h1v1h-1zM14 11h1v1h-1zM15 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM30 11h1v1h-1zM31 11h1v1h-1zM33 11h1v1h-1zM34 11h1v1h-1zM36 11h1v1h-1zM4 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM26 12h1v1h-1zM27 12h1v1h-1zM28 12h1v1h-1zM30 12h1v1h-1zM33 12h1v1h-1zM35 12h1v1h-1zM36 12h1v1h-1zM37 12h1v1h-1zM40 12h1v1h-1zM41 12h1v1h-1zM42 12h1v1h-1zM44 12h1v1h-1zM4 13h1v1h-1zM8 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM13 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM28 13h1v1h-1zM35 13h1v1h-1zM37 13h1v1h-1zM38 13h1v1h-1zM40 13h1v1h-1zM41 13h1v1h-1zM44 13h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h1v1h-1zM20 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM42 14h1v1h-1zM43 14h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM22 15h1v1h-1zM24 15h1v1h-1zM26 15h1v1h-1zM28 15h1v1h-1zM29 15h1v1h-1zM30 15h1v1h-1zM34 15h1v1h-1zM35 15h1v1h-1zM36 15h1v1h-1zM43 15h1v1h-1zM44 15h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM31 16h1v1h-1zM33 16h1v1h-1zM34 16h1v1h-1zM39 16h1v1h-1zM41 16h1v1h-1zM42 16h1v1h-1zM4 17h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM15 17h1v1h-1zM18 17h1v1h-1zM21 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM32 17h1v1h-1zM35 17h1v1h-1zM39 17h1v1h-1zM42 17h1v1h-1zM43 17h1v1h-1zM44 17h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM13 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM35 18h1v1h-1zM36 18h1v1h-1zM37 18h1v1h-1zM39 18h1v1h-1zM41 18h1v1h-1zM42 18h1v1h-1zM43 18h1v1h-1zM44 18h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM22 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM30 19h1v1h-1zM31 19h1v1h-1zM32 19h1v1h-1zM36 19h1v1h-1zM37 19h1v1h-1zM38 19h1v1h-1zM39 19h1v1h-1zM40 19h1v1h-1zM41 19h1v1h-1zM43 19h1v1h-1zM4 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM13 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM20 20h1v1h-1zM22 20h1v1h-1zM24 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM32 20h1v1h-1zM37 20h1v1h-1zM39 20h1v1h-1zM40 20h1v1h-1zM43 20h1v1h-1zM6 21h1v1h-1zM7 21h1v1h-1zM12 21h1v1h-1zM15 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM19 21h1v1h-1zM21 21h1v1h-1zM24 21h1v1h-1zM25 21h1v1h-1zM27 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM32 21h1v1h-1zM34 21h1v1h-1zM39 21h1v1h-1zM41 21h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM10 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM26 22h1v1h-1zM31 22h1v1h-1zM36 22h1v1h-1zM37 22h1v1h-1zM39 22h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM14 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM20 23h1v1h-1zM21 23h1v1h-1zM22 23h1v1h-1zM24 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM33 23h1v1h-1zM34 23h1v1h-1zM37 23h1v1h-1zM38 23h1v1h-1zM41 23h1v1h-1zM42 23h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM10 24h1v1h-1zM11 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h1v1h-1zM32 24h1v1h-1zM33 24h1v1h-1zM35 24h1v1h-1zM36 24h1v1h-1zM38 24h1v1h-1zM40 24h1v1h-1zM42 24h1v1h-1zM44 24h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM24 25h1v1h-1zM25 25h1v1h-1zM27 25h1v1h-1zM29 25h1v1h-1zM30 25h1v1h-1zM35 25h1v1h-1zM36 25h1v1h-1zM37 25h1v1h-1zM38 25h1v1h-1zM40 25h1v1h-1zM41 25h1v1h-1zM44 25h1v1h-1zM5 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM14 26h1v1h-1zM17 26h1v1h-1zM18 26h1v1h-1zM19 26h1v1h-1zM21 26h1v1h-1zM25 26h1v1h-1zM27 26h1v1h-1zM30 26h1v1h-1zM37 26h1v1h-1zM38 26h1v1h-1zM40 26h1v1h-1zM43 26h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM11 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM15 27h1v1h-1zM16 27h1v1h-1zM17 27h1v1h-1zM19 27h1v1h-1zM22 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM26 27h1v1h-1zM29 27h1v1h-1zM34 27h1v1h-1zM35 27h1v1h-1zM37 27h1v1h-1zM38 27h1v1h-1zM44 27h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM7 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM15 28h1v1h-1zM16 28h1v1h-1zM17 28h1v1h-1zM21 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM33 28h1v1h-1zM34 28h1v1h-1zM36 28h1v1h-1zM39 28h1v1h-1zM41 28h1v1h-1zM42 28h1v1h-1zM43 28h1v1h-1zM44 28h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM17 29h1v1h-1zM19 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM28 29h1v1h-1zM31 29h1v1h-1zM33 29h1v1h-1zM34 29h1v1h-1zM35 29h1v1h-1zM36 29h1v1h-1zM38 29h1v1h-1zM42 29h1v1h-1zM43 29h1v1h-1zM44 29h1v1h-1zM5 30h1v1h-1zM10 30h1v1h-1zM12 30h1v1h-1zM16 30h1v1h-1zM18 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM23 30h1v1h-1zM25 30h1v1h-1zM28 30h1v1h-1zM32 30h1v1h-1zM33 30h1v1h-1zM35 30h1v1h-1zM36 30h1v1h-1zM37 30h1v1h-1zM38 30h1v1h-1zM39 30h1v1h-1zM40 30h1v1h-1zM42 30h1v1h-1zM43 30h1v1h-1zM44 30h1v1h-1zM4 31h1v1h-1zM11 31h1v1h-1zM15 31h1v1h-1zM16 31h1v1h-1zM17 31h1v1h-1zM23 31h1v1h-1zM24 31h1v1h-1zM25 31h1v1h-1zM28 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM34 31h1v1h-1zM36 31h1v1h-1zM39 31h1v1h-1zM43 31h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM9 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM15 32h1v1h-1zM16 32h1v1h-1zM23 32h1v1h-1zM24 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM31 32h1v1h-1zM32 32h1v1h-1zM40 32h1v1h-1zM41 32h1v1h-1zM7 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM17 33h1v1h-1zM20 33h1v1h-1zM21 33h1v1h-1zM26 33h1v1h-1zM27 33h1v1h-1zM29 33h1v1h-1zM31 33h1v1h-1zM34 33h1v1h-1zM36 33h1v1h-1zM37 33h1v1h-1zM39 33h1v1h-1zM4 34h1v1h-1zM8 34h1v1h-1zM9 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h1v1h-1zM25 34h1v1h-1zM28 34h1v1h-1zM30 34h1v1h-1zM31 34h1v1h-1zM32 34h1v1h-1zM39 34h1v1h-1zM40 34h1v1h-1zM41 34h1v1h-1zM6 35h1v1h-1zM7 35h1v1h-1zM12 35h1v1h-1zM13 35h1v1h-1zM14 35h1v1h-1zM15 35h1v1h-1zM18 35h1v1h-1zM19 35h1v1h-1zM20 35h1v1h-1zM21 35h1v1h-1zM23 35h1v1h-1zM24 35h1v1h-1zM30 35h1v1h-1zM31 35h1v1h-1zM33 35h1v1h-1zM36 35h1v1h-1zM37 35h1v1h-1zM41 35h1v1h-1zM42 35h1v1h-1zM44 35h1v1h-1zM5 36h1v1h-1zM6 36h1v1h-1zM9 36h1v1h-1zM10 36h1v1h-1zM16 36h1v1h-1zM18 36h1v1h-1zM21 36h1v1h-1zM22 36h1v1h-1zM23 36h1v1h-1zM25 36h1v1h-1zM33 36h1v1h-1zM35 36h1v1h-1zM36 36h1v1h-1zM37 36h1v1h-1zM38 36h1v1h-1zM39 36h1v1h-1zM40 36h1v1h-1zM41 36h1v1h-1zM42 36h1v1h-1zM12 37h1v1h-1zM14 37h1v1h-1zM15 37h1v1h-1zM20 37h1v1h-1zM23 37h1v1h-1zM24 37h1v1h-1zM25 37h1v1h-1zM26 37h1v1h-1zM27 37h1v1h-1zM29 37h1v1h-1zM30 37h1v1h-1zM35 37h1v1h-1zM36 37h1v1h-1zM40 37h1v1h-1zM42 37h1v1h-1zM44 37h1v1h-1zM4 38h1v1h-1zM5 38h1v1h-1zM6 38h1v1h-1zM7 38h1v1h-1zM8 38h1v1h-1zM9 38h1v1h-1zM10 38h1v1h-1zM15 38h1v1h-1zM16 38h1v1h-1zM18 38h1v1h-1zM20 38h1v1h-1zM21 38h1v1h-1zM22 38h1v1h-1zM26 38h1v1h-1zM27 38h1v1h-1zM28 38h1v1h-1zM29 38h1v1h-1zM32 38h1v1h-1zM33 38h1v1h-1zM35 38h1v1h-1zM36 38h1v1h-1zM38 38h1v1h-1zM40 38h1v1h-1zM4 39h1v1h-1zM10 39h1v1h-1zM13 39h1v1h-1zM15 39h1v1h-1zM16 39h1v1h-1zM17 39h1v1h-1zM18 39h1v1h-1zM22 39h1v1h-1zM23 39h1v1h-1zM24 39h1v1h-1zM27 39h1v1h-1zM28 39h1v1h-1zM29 39h1v1h-1zM30 39h1v1h-1zM31 39h1v1h-1zM35 39h1v1h-1zM36 39h1v1h-1zM40 39h1v1h-1zM41 39h1v1h-1zM4 40h1v1h-1zM6 40h1v1h-1zM7 40h1v1h-1zM8 40h1v1h-1zM10 40h1v1h-1zM13 40h1v1h-1zM14 40h1v1h-1zM15 40h1v1h-1zM16 40h1v1h-1zM19 40h1v1h-1zM21 40h1v1h-1zM22 40h1v1h-1zM24 40h1v1h-1zM25 40h1v1h-1zM26 40h1v1h-1zM27 40h1v1h-1zM29 40h1v1h-1zM31 40h1v1h-1zM32 40h1v1h-1zM33 40h1v1h-1zM36 40h1v1h-1zM37 40h1v1h-1zM38 40h1v1h-1zM39 40h1v1h-1zM40 40h1v1h-1zM42 40h1v1h-1zM43 40h1v1h-1zM4 41h1v1h-1zM6 41h1v1h-1zM7 41h1v1h-1zM8 41h1v1h-1zM10 41h1v1h-1zM12 41h1v1h-1zM13 41h1v1h-1zM14 41h1v1h-1zM15 41h1v1h-1zM16 41h1v1h-1zM17 41h1v1h-1zM20 41h1v1h-1zM21 41h1v1h-1zM22 41h1v1h-1zM23 41h1v1h-1zM24 41h1v1h-1zM29 41h1v1h-1zM30 41h1v1h-1zM31 41h1v1h-1zM32 41h1v1h-1zM33 41h1v1h-1zM35 41h1v1h-1zM39 41h1v1h-1zM40 41h1v1h-1zM41 41h1v1h-1zM43 41h1v1h-1zM44 41h1v1h-1zM4 42h1v1h-1zM6 42h1v1h-1zM7 42h1v1h-1zM8 42h1v1h-1zM10 42h1v1h-1zM12 42h1v1h-1zM15 42h1v1h-1zM18 42h1v1h-1zM22 42h1v1h-1zM23 42h1v1h-1zM24 42h1v1h-1zM28 42h1v1h-1zM29 42h1v1h-1zM30 42h1v1h-1zM33 42h1v1h-1zM34 42h1v1h-1zM36 42h1v1h-1zM43 42h1v1h-1zM44 42h1v1h-1zM4 43h1v1h-1zM10 43h1v1h-1zM12 43h1v1h-1zM15 43h1v1h-1zM22 43h1v1h-1zM23 43h1v1h-1zM25 43h1v1h-1zM30 43h1v1h-1zM31 43h1v1h-1zM32 43h1v1h-1zM34 43h1v1h-1zM35 43h1v1h-1zM36 43h1v1h-1zM37 43h1v1h-1zM39 43h1v1h-1zM41 43h1v1h-1zM43 43h1v1h-1zM4 44h1v1h-1zM5 44h1v1h-1zM6 44h1v1h-1zM7 44h1v1h-1zM8 44h1v1h-1zM9 44h1v1h-1zM10 44h1v1h-1zM12 44h1v1h-1zM13 44h1v1h-1zM14 44h1v1h-1zM17 44h1v1h-1zM22 44h1v1h-1zM24 44h1v1h-1zM25 44h1v1h-1zM26 44h1v1h-1zM27 44h1v1h-1zM29 44h1v1h-1zM32 44h1v1h-1zM36 44h1v1h-1zM38 44h1v1h-1zM40 44h1v1h-1zM43 44h1v1h-1z"/></svg></span>
+        </a>
+        <p class="pay">
+          <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19M6 15h4"/></svg>
+          <span>Aceito pagamento com</span>
+          <span class="flash">Flash</span>
+        </p>
+      </div>
+      <p class="fine">Imagens ilustrativas. Sujeito à disponibilidade de estoque.</p>
+    </footer>
+
+  </div>
+</main>
+</body>
+</html>
