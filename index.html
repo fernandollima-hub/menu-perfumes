@@ -151,6 +151,74 @@
     flex: none;
   }
 
+  /* ---------- abas (Perfumes / Testers) ----------
+     radios escondidos controlam qual painel aparece, sem depender de JavaScript;
+     o script no fim só abre direto na aba Testers quando o link termina em #testers */
+  .aba-radio { position: absolute; opacity: 0; pointer-events: none; }
+  .tabs {
+    margin: 16px auto 2px;
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 999px;
+    background: var(--bg-deep);
+  }
+  .tabs label {
+    min-width: 120px;
+    padding: 10px 18px 9px;
+    border-radius: 999px;
+    text-align: center;
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+  .tabs label span { margin-right: -0.2em; }
+  .tabs label:hover { color: var(--champagne); }
+  #aba-perfumes:checked ~ .tabs label[for="aba-perfumes"],
+  #aba-testers:checked ~ .tabs label[for="aba-testers"] {
+    background: radial-gradient(circle at 34% 28%, var(--seal-hi) 0%, var(--seal) 48%, var(--seal-lo) 100%);
+    color: var(--seal-ink);
+  }
+  #aba-perfumes:focus-visible ~ .tabs label[for="aba-perfumes"],
+  #aba-testers:focus-visible ~ .tabs label[for="aba-testers"] {
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 3px;
+  }
+  .painel { display: none; }
+  #aba-perfumes:checked ~ #painel-perfumes,
+  #aba-testers:checked ~ #painel-testers { display: block; }
+  .painel-nota {
+    margin: 14px auto 0;
+    max-width: 40ch;
+    text-align: center;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--muted);
+    text-wrap: balance;
+  }
+  /* testers: a foto do próprio anúncio preenche o arco (sem o recorte de fundo das fotos de catálogo) */
+  .frame.foto img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--pos, 50% 50%);
+    mix-blend-mode: normal;
+  }
+  /* foto de celular, mais apagada que as outras: realce leve pra nao parecer esgotada */
+  .frame.foto img.realce { filter: brightness(1.1) contrast(1.06) saturate(1.2); }
+  /* item ainda sem foto: desenho neutro de frasco no lugar */
+  .frame.sem-foto { display: grid; place-items: center; }
+  .frame.sem-foto svg { width: 42%; height: auto; color: var(--gold-dim); }
+
   /* ---------- seções ---------- */
   .sec-t {
     display: flex;
@@ -291,7 +359,7 @@
   .brand .sep {
     display: inline-block;
     width: 4px; height: 4px;
-    margin: 0 8px 0 4px;
+    margin: 0 8px 0 0;
     vertical-align: middle;
     background: var(--gold-dim);
     transform: rotate(45deg) translateY(-1px);
@@ -325,6 +393,34 @@
     color: var(--gold-bright);
     white-space: nowrap;
   }
+  /* item esgotado: foto e texto em cinza e apagados, carimbo "Esgotado" por cima da foto.
+     Pra voltar ao estoque é só tirar a classe "esgotado" e o <p class="stamp"> do item. */
+  .item.esgotado .frame { filter: grayscale(1); opacity: 0.55; }
+  .item.esgotado .seal { display: none; }
+  .item.esgotado .info { filter: grayscale(1); opacity: 0.5; }
+  .stamp {
+    position: absolute;
+    left: 50%;
+    top: 54%;
+    z-index: 4;
+    margin: 0;
+    transform: translate(-50%, -50%) rotate(-12deg);
+    padding: 7px 12px 6px;
+    background: var(--bg-deep);
+    border: 1px solid var(--gold);
+    outline: 1px solid var(--gold-faint);
+    outline-offset: 3px;
+    color: var(--gold-bright);
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 10px 20px -10px var(--shadow);
+  }
+  .stamp span { margin-right: -0.16em; }
   /* bloco de preço: de / por / economize empilhados à direita */
   .de {
     margin: 7px 0 0;
@@ -401,7 +497,7 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted);
-    margin-right: 7px;
+    margin-right: 3px;
   }
 
   /* ---------- rodapé ---------- */
@@ -541,7 +637,7 @@
     .seal b em { font-size: 12px; margin-left: 0; }
     .seal span { font-size: 12px; letter-spacing: 0.08em; margin-right: -0.08em; margin-top: 1px; }
     .brand { font-size: 12px; letter-spacing: 0.06em; }
-    .brand .sep { margin: 0 5px 0 3px; }
+    .brand .sep { margin: 0 5px 0 0; }
     .name { font-size: 20px; margin-top: 4px; }
     .de { margin-top: 5px; font-size: 14.5px; }
     .de i { font-size: 15px; margin-right: 0; }
@@ -549,7 +645,7 @@
     .lead { margin: 0 6px; }
     .price { font-size: 32px; }
     .save { font-size: 14px; margin-top: 3px; }
-    .save span { letter-spacing: 0.1em; margin-right: 5px; }
+    .save span { letter-spacing: 0.1em; margin-right: 1px; }
     .foot { margin-top: 18px; }
     .cta-box { padding: 13px 12px 12px; }
     .cta { font-size: 21px; }
@@ -559,12 +655,20 @@
     .wa-side { gap: 10px; }
     .wa-btn { font-size: 15px; padding: 8px 14px 7px; }
     .pay { font-size: 14.5px; margin-top: 16px; padding-top: 12px; }
+    .stamp { font-size: 12px; letter-spacing: 0.12em; padding: 6px 9px 5px; }
+    .stamp span { margin-right: -0.12em; }
+    .tabs { margin-top: 14px; }
+    .tabs label { min-width: 0; padding: 9px 16px 8px; font-size: 12.5px; letter-spacing: 0.14em; }
+    .tabs label span { margin-right: -0.14em; }
+    .painel-nota { font-size: 13px; }
   }
   @media (max-width: 370px) {
     .price { font-size: 29px; }
   }
   @media (max-width: 350px) {
-    .price { font-size: 26px; }
+    .price { font-size: 24px; }
+    .lead { min-width: 0; margin: 0 4px; }
+    .cond span { letter-spacing: 0.04em; padding: 4px 6px 3px; }
   }
 </style>
 </head>
@@ -589,6 +693,15 @@
       <p class="sub"><span>Seleção com preço especial</span></p>
     </header>
 
+    <input class="aba-radio" type="radio" name="aba" id="aba-perfumes" checked>
+    <input class="aba-radio" type="radio" name="aba" id="aba-testers">
+    <div class="tabs">
+      <label for="aba-perfumes"><span>Lacrados</span></label>
+      <label for="aba-testers"><span>Testers</span></label>
+    </div>
+
+    <div class="painel" id="painel-perfumes">
+
     <section>
       <h2 class="sec-t"><span>Masculino</span></h2>
 
@@ -600,11 +713,11 @@
           <div class="seal"><b>28<em>%</em></b><span>OFF</span></div>
         </div>
         <div class="info">
-          <p class="brand">Rabanne<span class="sep"></span><span class="vol">50 ml</span></p>
+          <p class="brand">Rabanne <span class="vol"><span class="sep"></span>50 ml</span></p>
           <h3 class="name">One Million Gold Elixir</h3>
-          <p class="de"><i>de</i> <s>R$ 769,90</s></p>
+          <p class="de"><i>de</i> <s>R$&nbsp;769,90</s></p>
           <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>549,90</span></p>
-          <p class="save"><span>Economize</span>R$ 220,00</p>
+          <p class="save"><span>Economize</span> R$&nbsp;220,00</p>
         </div>
       </article>
     </section>
@@ -620,11 +733,11 @@
           <div class="seal"><b>38<em>%</em></b><span>OFF</span></div>
         </div>
         <div class="info">
-          <p class="brand">Carolina Herrera<span class="sep"></span><span class="vol">30 ml</span></p>
+          <p class="brand">Carolina Herrera <span class="vol"><span class="sep"></span>30 ml</span></p>
           <h3 class="name">212 VIP Rosé</h3>
-          <p class="de"><i>de</i> <s>R$ 489,00</s></p>
+          <p class="de"><i>de</i> <s>R$&nbsp;489,00</s></p>
           <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>300,00</span></p>
-          <p class="save"><span>Economize</span>R$ 189,00</p>
+          <p class="save"><span>Economize</span> R$&nbsp;189,00</p>
         </div>
       </article>
 
@@ -637,11 +750,11 @@
           <div class="seal"><b>33<em>%</em></b><span>OFF</span></div>
         </div>
         <div class="info">
-          <p class="brand">Lancôme<span class="sep"></span><span class="vol">30 ml</span></p>
+          <p class="brand">Lancôme <span class="vol"><span class="sep"></span>30 ml</span></p>
           <h3 class="name">La Vie Est Belle L’Elixir</h3>
-          <p class="de"><i>de</i> <s>R$ 598,00</s></p>
+          <p class="de"><i>de</i> <s>R$&nbsp;598,00</s></p>
           <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>398,00</span></p>
-          <p class="save"><span>Economize</span>R$ 200,00</p>
+          <p class="save"><span>Economize</span> R$&nbsp;200,00</p>
         </div>
       </article>
 
@@ -653,15 +766,210 @@
           <div class="seal"><b>30<em>%</em></b><span>OFF</span></div>
         </div>
         <div class="info">
-          <p class="brand">Carolina Herrera<span class="sep"></span><span class="vol">30 ml</span></p>
+          <p class="brand">Carolina Herrera <span class="vol"><span class="sep"></span>30 ml</span></p>
           <h3 class="name">CH</h3>
-          <p class="de"><i>de</i> <s>R$ 499,00</s></p>
+          <p class="de"><i>de</i> <s>R$&nbsp;499,00</s></p>
           <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>349,00</span></p>
-          <p class="save"><span>Economize</span>R$ 150,00</p>
+          <p class="save"><span>Economize</span> R$&nbsp;150,00</p>
+        </div>
+      </article>
+
+      <article class="item esgotado">
+        <div class="frame-wrap">
+          <div class="frame">
+            <img src="img/good-girl-hd.png" alt="Good Girl Jasmine Absolute (esgotado)" style="--w:86.2%; --l:8.2%; --b:-2.9%">
+          </div>
+          <div class="seal"><b>33<em>%</em></b><span>OFF</span></div>
+          <p class="stamp"><span>Esgotado</span></p>
+        </div>
+        <div class="info">
+          <p class="brand">Carolina Herrera <span class="vol"><span class="sep"></span>30 ml</span></p>
+          <h3 class="name">Good Girl Jasmine Absolute</h3>
+          <p class="de"><i>de</i> <s>R$&nbsp;599,99</s></p>
+          <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>400,00</span></p>
+          <p class="save"><span>Economize</span> R$&nbsp;199,99</p>
         </div>
       </article>
     </section>
 
+
+    </div>
+
+    <div class="painel" id="painel-testers">
+      <p class="painel-nota">Embaixo do nome de cada um aparece quanto de perfume tem no frasco.</p>
+
+      <section>
+        <h2 class="sec-t"><span>Masculino</span></h2>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/invictus-parfum.jpg" alt="Invictus Parfum Rabanne" style="--pos:50% 26%">
+            </div>
+            <div class="seal"><b>37<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Rabanne <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Invictus Parfum</h3>
+            <p class="cond"><span>Cheio</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;721,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>450,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;271,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/invictus-parfum.jpg" alt="Invictus Parfum Rabanne" style="--pos:50% 26%">
+            </div>
+            <div class="seal"><b>44<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Rabanne <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Invictus Parfum</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;721,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>400,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;321,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img class="realce" src="img/gentleman-edt.webp" alt="Gentleman Eau de Toilette Givenchy, frasco tester" style="--pos:50% 45%">
+            </div>
+            <div class="seal"><b>50<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Givenchy <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Gentleman Eau de Toilette</h3>
+            <p class="cond"><span>80% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;500,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>250,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;250,00</p>
+          </div>
+        </article>
+
+        <article class="item esgotado">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/ultra-male.png" alt="Ultra Male Jean Paul Gaultier (esgotado)" style="--pos:50% 55%">
+            </div>
+            <div class="seal"><b>36<em>%</em></b><span>OFF</span></div>
+            <p class="stamp"><span>Esgotado</span></p>
+          </div>
+          <div class="info">
+            <p class="brand">Jean Paul Gaultier <span class="vol"><span class="sep"></span>125 ml</span></p>
+            <h3 class="name">Ultra Male</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;631,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>400,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;231,00</p>
+          </div>
+        </article>
+      </section>
+
+      <section>
+        <h2 class="sec-t"><span>Feminino</span></h2>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/gaultier-divine.webp" alt="Gaultier Divine Jean Paul Gaultier" style="--pos:50% 38%">
+            </div>
+            <div class="seal"><b>46<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Jean Paul Gaultier <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Gaultier Divine</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;849,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>450,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;399,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto sem-foto">
+              <!-- ainda sem foto do Classique: desenho neutro de frasco -->
+              <svg viewBox="0 0 60 80" fill="none" stroke="currentColor" stroke-width="2" role="img" aria-label="Classique Jean Paul Gaultier"><rect x="22" y="4" width="16" height="12" rx="2"/><path d="M26 16v6M34 16v6"/><rect x="10" y="22" width="40" height="54" rx="9"/><path d="M20 44h20M23 52h14"/></svg>
+            </div>
+            <div class="seal"><b>53<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Jean Paul Gaultier <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Classique</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;750,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>350,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;400,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/212-vip-rose-tester.png" alt="212 VIP Rosé Carolina Herrera, frasco tester" style="--pos:50% 50%">
+            </div>
+            <div class="seal"><b>49<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Carolina Herrera <span class="vol"><span class="sep"></span>80 ml</span></p>
+            <h3 class="name">212 VIP Rosé</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;899,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>450,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;449,00</p>
+          </div>
+        </article>
+      </section>
+      <section>
+        <h2 class="sec-t"><span>Unissex</span></h2>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/light-blue.png" alt="Light Blue Dolce &amp; Gabbana" style="--pos:50% 50%">
+            </div>
+            <div class="seal"><b>42<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Dolce &amp; Gabbana <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Light Blue</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;699,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>400,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;299,00</p>
+          </div>
+        </article>
+      </section>
+
+      <section>
+        <h2 class="sec-t"><span>Extra · Feminino</span></h2>
+
+        <article class="item esgotado">
+          <div class="frame-wrap">
+            <div class="frame">
+              <!-- vendido sem caixa: a foto mostra só o frasco -->
+              <img src="img/ysl-libre.png" alt="Libre Yves Saint Laurent, frasco sem caixa (esgotado)" style="--w:45.5%; --l:27.2%; --b:5.2%">
+            </div>
+            <div class="seal"><b>69<em>%</em></b><span>OFF</span></div>
+            <p class="stamp"><span>Esgotado</span></p>
+          </div>
+          <div class="info">
+            <p class="brand">Yves Saint Laurent <span class="vol"><span class="sep"></span>90 ml</span></p>
+            <h3 class="name">Libre</h3>
+            <p class="cond"><span>Sem caixa</span><span>75% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;1.295,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>400,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;895,00</p>
+          </div>
+        </article>
+      </section>
+    </div>
 
     <footer class="foot">
       <div class="cta-box">
@@ -684,5 +992,16 @@
 
   </div>
 </main>
+<script>
+  // abre direto na aba Testers quando o link termina em #testers, e mantém o endereço certo ao trocar de aba
+  (function () {
+    var t = document.getElementById('aba-testers'), p = document.getElementById('aba-perfumes');
+    if (location.hash === '#testers') t.checked = true;
+    function sync() { try { history.replaceState(null, '', t.checked ? '#testers' : location.pathname + location.search); } catch (e) {} }
+    t.addEventListener('change', sync);
+    p.addEventListener('change', sync);
+    addEventListener('hashchange', function () { (location.hash === '#testers' ? t : p).checked = true; });
+  })();
+</script>
 </body>
 </html>
