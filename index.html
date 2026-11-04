@@ -53,9 +53,12 @@
     /* verde oficial do WhatsApp, só no ícone do rodapé */
     --wa: #25D366;
     --wa-ink: #07361C;
-    /* rosa do cartão Flash, só na etiqueta de pagamento */
+    /* rosa do cartão Flash */
     --flash: #D50E5D;
     --flash-ink: #FFFFFF;
+    /* verde-água do Pix */
+    --pix: #32BCAD;
+    --pix-ink: #04312C;
 
     --fw: 132px;           /* largura da moldura (com o respiro do filete) */
     --gap: 22px;           /* espaço moldura -> texto */
@@ -597,14 +600,20 @@
     color: var(--champagne);
   }
   .pay-icon { width: 24px; height: 24px; flex: none; color: var(--gold); }
-  .flash {
+  /* formas de pagamento: o grupo de etiquetas fica sempre junto (desce inteiro pra linha de baixo) */
+  .pags { display: inline-flex; gap: 8px; }
+  .pag {
     padding: 5px 12px 4px;
     border-radius: 999px;
-    background: var(--flash);
-    color: var(--flash-ink);
     font-weight: 600;
     letter-spacing: 0.02em;
   }
+  .pag.pix { background: var(--pix); color: var(--pix-ink); }
+  .pag.credito {
+    background: radial-gradient(circle at 34% 28%, var(--seal-hi) 0%, var(--seal) 48%, var(--seal-lo) 100%);
+    color: var(--seal-ink);
+  }
+  .pag.flash { background: var(--flash); color: var(--flash-ink); }
   .fine {
     margin: 10px 0 0;
     font-size: 12.5px;
@@ -914,7 +923,7 @@
         <article class="item">
           <div class="frame-wrap">
             <div class="frame foto">
-              <img src="img/212-vip-rose-tester.png" alt="212 VIP Rosé Carolina Herrera, frasco tester" style="--pos:50% 50%">
+              <img src="img/212-vip-rose-80.png" alt="212 VIP Rosé Carolina Herrera, frasco tester" style="--pos:50% 50%">
             </div>
             <div class="seal"><b>49<em>%</em></b><span>OFF</span></div>
           </div>
@@ -927,30 +936,23 @@
             <p class="save"><span>Economize</span> R$&nbsp;449,00</p>
           </div>
         </article>
-      </section>
-      <section>
-        <h2 class="sec-t"><span>Unissex</span></h2>
 
         <article class="item">
           <div class="frame-wrap">
-            <div class="frame foto">
-              <img src="img/light-blue.png" alt="Light Blue Dolce &amp; Gabbana" style="--pos:50% 50%">
+            <div class="frame">
+              <img src="img/ysl-libre.png" alt="Libre Yves Saint Laurent" style="--w:45.5%; --l:27.2%; --b:5.2%">
             </div>
-            <div class="seal"><b>42<em>%</em></b><span>OFF</span></div>
+            <div class="seal"><b>49<em>%</em></b><span>OFF</span></div>
           </div>
           <div class="info">
-            <p class="brand">Dolce &amp; Gabbana <span class="vol"><span class="sep"></span>100 ml</span></p>
-            <h3 class="name">Light Blue</h3>
-            <p class="cond"><span>90% do conteúdo</span></p>
-            <p class="de"><i>de</i> <s>R$&nbsp;699,00</s></p>
-            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>400,00</span></p>
-            <p class="save"><span>Economize</span> R$&nbsp;299,00</p>
+            <p class="brand">Yves Saint Laurent <span class="vol"><span class="sep"></span>90 ml</span></p>
+            <h3 class="name">Libre</h3>
+            <p class="cond"><span>Cheio</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;1.295,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>650,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;645,00</p>
           </div>
         </article>
-      </section>
-
-      <section>
-        <h2 class="sec-t"><span>Extra · Feminino</span></h2>
 
         <article class="item esgotado">
           <div class="frame-wrap">
@@ -971,6 +973,27 @@
           </div>
         </article>
       </section>
+      <section>
+        <h2 class="sec-t"><span>Unissex</span></h2>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/light-blue.png" alt="Light Blue Dolce &amp; Gabbana" style="--pos:50% 50%">
+            </div>
+            <div class="seal"><b>55<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Dolce &amp; Gabbana <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Light Blue</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;899,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>400,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;499,00</p>
+          </div>
+        </article>
+      </section>
+
     </div>
 
     <footer class="foot">
@@ -986,7 +1009,7 @@
         <p class="pay">
           <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19M6 15h4"/></svg>
           <span>Aceito pagamento com</span>
-          <span class="flash">Flash</span>
+          <span class="pags"><span class="pag pix">Pix</span><span class="pag credito">Crédito</span><span class="pag flash">Flash</span></span>
         </p>
       </div>
       <p class="fine">Imagens ilustrativas. Sujeito à disponibilidade de estoque.</p>
