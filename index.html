@@ -623,6 +623,82 @@
     text-wrap: balance;
   }
 
+  /* ---------- foto ampliada: tocar/clicar na foto abre ela grande na tela ----------
+     (só no site/HTML; o script liga isso ao carregar, então as imagens do WhatsApp e o PDF ficam iguais) */
+  .frame-wrap[role="button"] { cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
+  .frame-wrap[role="button"]:focus { outline: none; }
+  .frame-wrap[role="button"]:focus-visible .frame { outline: 2px solid var(--gold-bright); }
+  html.lb-on, html.lb-on body { overflow: hidden; }
+  .lb {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 64px 16px 24px;
+    overflow-y: auto;                 /* tela baixa (celular deitado): rola em vez de cortar */
+    overscroll-behavior: contain;
+    background: rgba(14, 6, 10, 0.97);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    cursor: zoom-out;
+    animation: lb-in 0.18s ease-out;
+  }
+  .lb[hidden] { display: none; }
+  .lb > .lb-quadro { margin-top: auto; }    /* centraliza na vertical sem cortar o topo quando nao cabe */
+  .lb > .lb-cap { margin-bottom: auto; }
+  @keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .lb { animation: none; } }
+  .lb-quadro {
+    flex: none;
+    line-height: 0;
+    background: var(--porcelain);   /* fotos de catálogo (fundo branco) somem na porcelana, igual à moldura */
+    border-radius: 6px;
+    outline: 1px solid var(--gold-dim);
+    outline-offset: 5px;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: 0 28px 56px -24px #000;
+  }
+  .lb-quadro.foto { background: var(--bg-deep); }
+  .lb-quadro img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(88vw, 620px);
+    max-height: calc(100vh - 230px);
+    max-height: calc(100dvh - 230px);
+  }
+  .lb-cap { max-width: min(88vw, 620px); text-align: center; }
+  .lb-cap .name { font-size: 24px; }
+  .lb-cap .cond { justify-content: center; }
+  .lb-fechar {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    background: var(--panel);
+    color: var(--gold-bright);
+    cursor: pointer;
+  }
+  .lb-fechar svg { width: 18px; height: 18px; }
+  .lb-fechar:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+  /* tela baixa (celular deitado): menos respiro, foto maior, legenda menor */
+  @media (max-height: 520px) {
+    .lb { gap: 10px; padding: 14px 68px; }
+    .lb-quadro img { max-height: calc(100vh - 118px); max-height: calc(100dvh - 118px); }
+    .lb-cap .name { font-size: 19px; margin-top: 2px; }
+    .lb-cap .cond { margin-top: 5px; }
+  }
+
   /* ---------- tela larga: só mais respiro em volta ---------- */
   @media (min-width: 700px) {
     .page { padding-block: 40px; }
@@ -864,6 +940,41 @@
           </div>
         </article>
 
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/boss-bottled-night.png" alt="Boss Bottled Night Hugo Boss" style="--pos:50% 50%">
+            </div>
+            <div class="seal"><b>55<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Hugo Boss <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Boss Bottled Night</h3>
+            <p class="cond"><span>Cheio</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;679,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>300,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;379,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame">
+              <!-- foto oficial hugoboss.com (fundo transparente), já na proporção da moldura -->
+              <img src="img/hugo-jeans.png" alt="Hugo Jeans Hugo Boss, frasco" style="--w:100%; --l:0%; --b:0%">
+            </div>
+            <div class="seal"><b>60<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Hugo Boss <span class="vol"><span class="sep"></span>125 ml</span></p>
+            <h3 class="name">Hugo Jeans</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;630,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>250,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;380,00</p>
+          </div>
+        </article>
+
         <article class="item esgotado">
           <div class="frame-wrap">
             <div class="frame foto">
@@ -954,6 +1065,58 @@
           </div>
         </article>
 
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/lady-million-fabulous.png" alt="Lady Million Fabulous Rabanne" style="--pos:50% 50%">
+            </div>
+            <div class="seal"><b>49<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Rabanne <span class="vol"><span class="sep"></span>80 ml</span></p>
+            <h3 class="name">Lady Million Fabulous</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;899,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>450,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;449,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame">
+              <!-- foto oficial rabanne.com (fundo clareado pra branco), já na proporção da moldura -->
+              <img src="img/lady-million-royal.png" alt="Lady Million Royal Rabanne, frasco" style="--w:100%; --l:0%; --b:0%">
+            </div>
+            <div class="seal"><b>43<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Rabanne <span class="vol"><span class="sep"></span>80 ml</span></p>
+            <h3 class="name">Lady Million Royal</h3>
+            <p class="cond"><span>95% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;799,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>450,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;349,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap">
+            <div class="frame foto">
+              <img src="img/lady-million-empire.png" alt="Lady Million Empire Rabanne" style="--pos:50% 50%">
+            </div>
+            <div class="seal"><b>46<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Rabanne <span class="vol"><span class="sep"></span>80 ml</span></p>
+            <h3 class="name">Lady Million Empire</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;750,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>400,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;350,00</p>
+          </div>
+        </article>
+
         <article class="item esgotado">
           <div class="frame-wrap">
             <div class="frame">
@@ -1017,6 +1180,12 @@
 
   </div>
 </main>
+<!-- foto ampliada (abre ao tocar na foto de um perfume) -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
+  <button class="lb-fechar" type="button" aria-label="Fechar foto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  <div class="lb-quadro"><img alt=""></div>
+  <div class="lb-cap"></div>
+</div>
 <script>
   // abre direto na aba Testers quando o link termina em #testers, e mantém o endereço certo ao trocar de aba
   (function () {
@@ -1026,6 +1195,66 @@
     t.addEventListener('change', sync);
     p.addEventListener('change', sync);
     addEventListener('hashchange', function () { (location.hash === '#testers' ? t : p).checked = true; });
+  })();
+
+  // tocar/clicar na foto de um perfume abre ela grande; fecha no X, tocando em qualquer lugar, com Esc ou com o "voltar" do celular
+  (function () {
+    var lb = document.getElementById('lb');
+    if (!lb) return;
+    var quadro = lb.querySelector('.lb-quadro'), big = quadro.querySelector('img'), cap = lb.querySelector('.lb-cap'), fechar = lb.querySelector('.lb-fechar');
+    var origem = null, comHistorico = false;
+
+    function abrir(wrap) {
+      var img = wrap.querySelector('.frame img'), item = wrap.closest('.item');
+      if (!img || !item) return;
+      var cs = getComputedStyle(img);
+      big.src = img.currentSrc || img.src;
+      big.alt = img.alt;
+      big.style.filter = cs.filter && cs.filter !== 'none' ? cs.filter : '';   // mesma correção de cor da moldura
+      big.style.mixBlendMode = cs.mixBlendMode;
+      quadro.classList.toggle('foto', !!wrap.querySelector('.frame.foto'));
+      cap.innerHTML = '';
+      ['.brand', '.name'].forEach(function (sel) { var el = item.querySelector(sel); if (el) cap.appendChild(el.cloneNode(true)); });
+      var cond = item.querySelector('.cond');
+      cond = cond ? cond.cloneNode(true) : null;
+      if (item.classList.contains('esgotado')) {
+        if (!cond) { cond = document.createElement('p'); cond.className = 'cond'; }
+        var esg = document.createElement('span'); esg.textContent = 'Esgotado'; cond.appendChild(esg);
+      }
+      if (cond) cap.appendChild(cond);
+      origem = wrap;
+      lb.hidden = false;
+      document.documentElement.classList.add('lb-on');
+      try { history.pushState({ lb: 1 }, ''); comHistorico = true; } catch (e) { comHistorico = false; }
+      fechar.focus({ preventScroll: true });
+    }
+    function fecharLb(peloVoltar) {
+      if (lb.hidden) return;
+      lb.hidden = true;
+      document.documentElement.classList.remove('lb-on');
+      big.removeAttribute('src');
+      if (comHistorico && !peloVoltar) { try { history.back(); } catch (e) {} }
+      comHistorico = false;
+      if (origem) origem.focus({ preventScroll: true });   // sem isso a página dava um pulo ao fechar
+    }
+
+    document.querySelectorAll('.item .frame-wrap').forEach(function (wrap) {
+      var img = wrap.querySelector('.frame img');
+      if (!img) return;
+      var nome = wrap.closest('.item').querySelector('.name');
+      wrap.setAttribute('role', 'button');
+      wrap.tabIndex = 0;
+      wrap.setAttribute('aria-label', 'Ver foto ampliada' + (nome ? ': ' + nome.textContent : ''));
+      wrap.addEventListener('click', function () { abrir(wrap); });
+      wrap.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(wrap); } });
+    });
+    lb.addEventListener('click', function () { fecharLb(false); });
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); fecharLb(false); }
+      else if (e.key === 'Tab') { e.preventDefault(); fechar.focus(); }
+    });
+    addEventListener('popstate', function () { if (!lb.hidden) fecharLb(true); });
   })();
 </script>
 </body>
