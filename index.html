@@ -109,6 +109,27 @@
 
   /* ---------- cabeçalho ---------- */
   .head { text-align: center; padding-bottom: 6px; }
+  /* botão do WhatsApp no canto de cima (mesmo link do rodapé) */
+  .wa-topo {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--wa);
+    color: #FFFFFF;
+    box-shadow: 0 0 0 3px var(--panel), 0 0 0 4px var(--gold-dim), 0 8px 16px -6px var(--shadow);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .wa-topo svg { width: 24px; height: 24px; display: block; }
+  .wa-topo:hover { transform: scale(1.06); filter: brightness(1.06); }
+  .wa-topo:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 5px; }
+  @media (prefers-reduced-motion: reduce) { .wa-topo { transition: none; } }
   .head h1 {
     margin: 0;
     font-weight: 400;
@@ -159,8 +180,10 @@
      o script no fim só abre direto na aba Testers quando o link termina em #testers */
   .aba-radio { position: absolute; opacity: 0; pointer-events: none; }
   .tabs {
+    position: relative;
     margin: 16px auto 2px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;   /* as duas abas com a mesma largura: a pílula só desliza meia largura */
     width: fit-content;
     max-width: 100%;
     padding: 4px;
@@ -169,7 +192,23 @@
     border-radius: 999px;
     background: var(--bg-deep);
   }
+  /* pílula dourada: uma camada só, que desliza de uma aba pra outra */
+  .tabs::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc(50% - 6px);
+    border-radius: 999px;
+    background: radial-gradient(circle at 34% 28%, var(--seal-hi) 0%, var(--seal) 48%, var(--seal-lo) 100%);
+    box-shadow: 0 6px 14px -8px var(--shadow);
+    transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  #aba-testers:checked ~ .tabs::before { transform: translateX(calc(100% + 4px)); }
   .tabs label {
+    position: relative;
+    z-index: 1;
     min-width: 120px;
     padding: 10px 18px 9px;
     border-radius: 999px;
@@ -182,13 +221,21 @@
     color: var(--muted);
     cursor: pointer;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.3s ease, transform 0.15s ease;
   }
   .tabs label span { margin-right: -0.2em; }
-  .tabs label:hover { color: var(--champagne); }
+  /* passar o mouse: a aba cresce de leve, igual ao botão do WhatsApp (só onde tem mouse, pra não grudar no toque) */
+  @media (hover: hover) {
+    .tabs label:hover { color: var(--champagne); transform: scale(1.06); }
+  }
   #aba-perfumes:checked ~ .tabs label[for="aba-perfumes"],
   #aba-testers:checked ~ .tabs label[for="aba-testers"] {
-    background: radial-gradient(circle at 34% 28%, var(--seal-hi) 0%, var(--seal) 48%, var(--seal-lo) 100%);
     color: var(--seal-ink);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tabs::before, .tabs label { transition: none; }
+    .tabs label:hover { transform: none; }
   }
   #aba-perfumes:focus-visible ~ .tabs label[for="aba-perfumes"],
   #aba-testers:focus-visible ~ .tabs label[for="aba-testers"] {
@@ -640,15 +687,96 @@
     padding: 64px 16px 24px;
     overflow-y: auto;                 /* tela baixa (celular deitado): rola em vez de cortar */
     overscroll-behavior: contain;
-    background: rgba(14, 6, 10, 0.97);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
     cursor: zoom-out;
     animation: lb-in 0.18s ease-out;
   }
+  /* fundo escuro + desfoque numa camada propria: backdrop-filter no .lb prenderia o X (position: fixed) na rolagem */
+  .lb::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: rgba(14, 6, 10, 0.97);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
   .lb[hidden] { display: none; }
-  .lb > .lb-quadro { margin-top: auto; }    /* centraliza na vertical sem cortar o topo quando nao cabe */
-  .lb > .lb-cap { margin-bottom: auto; }
+  /* centraliza na vertical sem cortar o topo quando nao cabe (margin auto em vez de justify-content) */
+  .lb-corpo { margin-block: auto; display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
+  .lb-col { display: flex; flex-direction: column; align-items: center; gap: 18px; min-width: 0; }
+
+  /* ---------- perfil olfativo do lado da foto (dados do Fragrantica, só nos itens com data-perfil) ---------- */
+  .lb-info {
+    width: 100%;
+    max-width: 520px;
+    box-sizing: border-box;
+    padding: 18px 18px 14px;
+    background: var(--panel);
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    outline: 1px solid var(--gold-ghost);
+    outline-offset: 4px;
+    text-align: left;
+    cursor: auto;
+  }
+  .lb-info[hidden] { display: none; }
+  .lb-info-t {
+    margin: 0 0 10px;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .lb-info-t + .acordes, .lb-info-t + .piramide { margin-top: 0; }
+  .acordes { margin: 0 0 18px; padding: 0; list-style: none; display: grid; gap: 7px; }
+  .acordes li { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 10px; }
+  .ac-nome { font-family: var(--sans); font-size: 13.5px; line-height: 1.2; color: var(--champagne); }
+  .ac-nome::first-letter { text-transform: uppercase; }
+  .ac-barra { height: 10px; border-radius: 0 5px 5px 0; background: var(--gold-ghost); overflow: hidden; }
+  .ac-barra i { display: block; height: 100%; border-radius: 0 5px 5px 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+  /* quando usar: 4 estações numa linha, dia e noite embaixo (cada um ocupa 2 colunas) */
+  .quando { margin: 0 0 18px; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 8px; }
+  .quando li { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 0; }
+  .quando li.periodo { grid-column: span 2; }
+  .q-ico { width: 22px; height: 22px; color: var(--muted); opacity: 0.7; }
+  .quando li.top .q-ico { opacity: 1; }
+  .q-nome { margin-top: 3px; font-family: var(--sans); font-size: 12px; line-height: 1.2; color: var(--champagne); white-space: nowrap; }
+  .q-barra { width: 100%; height: 6px; margin-top: 5px; border-radius: 3px; background: var(--gold-ghost); overflow: hidden; }
+  .q-barra i { display: block; height: 100%; border-radius: 3px; }
+  .q-votos { margin-top: 3px; font-family: var(--sans); font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .piramide { margin: 0; display: grid; gap: 10px; }
+  .piramide div { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 10px; align-items: baseline; }
+  .piramide dt { font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .piramide dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .nota {
+    padding: 3px 9px 2px;
+    border: 1px solid var(--gold-faint);
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--champagne);
+  }
+  .nota.forte { border-color: var(--gold-dim); color: var(--gold-bright); }
+  .lb-fonte {
+    display: inline-block;
+    margin-top: 14px;
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .lb-fonte:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+  /* com perfil, a foto encolhe um pouco pra caber o painel (embaixo no celular, do lado no computador) */
+  .lb.tem-perfil .lb-quadro img { max-height: 46vh; max-height: 46dvh; }
+  @media (min-width: 780px) {
+    .lb.tem-perfil .lb-corpo { flex-direction: row; justify-content: center; align-items: center; gap: 40px; max-width: 1040px; }
+    .lb.tem-perfil .lb-quadro img { max-width: min(44vw, 520px); max-height: calc(100vh - 230px); max-height: calc(100dvh - 230px); }
+    .lb.tem-perfil .lb-info { width: 380px; flex: none; max-height: calc(100vh - 96px); max-height: calc(100dvh - 96px); overflow-y: auto; }
+  }
   @keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .lb { animation: none; } }
   .lb-quadro {
@@ -675,7 +803,8 @@
   .lb-cap .name { font-size: 24px; }
   .lb-cap .cond { justify-content: center; }
   .lb-fechar {
-    position: absolute;
+    position: fixed;                  /* fica no canto mesmo rolando o painel no celular */
+    z-index: 1;
     top: 12px;
     right: 12px;
     width: 44px;
@@ -694,6 +823,7 @@
   /* tela baixa (celular deitado): menos respiro, foto maior, legenda menor */
   @media (max-height: 520px) {
     .lb { gap: 10px; padding: 14px 68px; }
+    .lb-corpo, .lb-col { gap: 10px; }
     .lb-quadro img { max-height: calc(100vh - 118px); max-height: calc(100dvh - 118px); }
     .lb-cap .name { font-size: 19px; margin-top: 2px; }
     .lb-cap .cond { margin-top: 5px; }
@@ -709,6 +839,8 @@
     :root { --fw: 104px; --gap: 14px; }
     .carta { padding: 22px 16px 18px; }
     .carta::before { inset: 5px; }
+    .wa-topo { top: 14px; right: 14px; width: 38px; height: 38px; }
+    .wa-topo svg { width: 22px; height: 22px; }
     .h1-a { font-size: 56px; }
     .h1-b { font-size: 22px; }
     .sub { font-size: 12px; letter-spacing: 0.14em; gap: 10px; }
@@ -774,6 +906,7 @@
   <div class="carta">
 
     <header class="head">
+      <a class="wa-topo" href="https://wa.me/5551993467804?text=oii%2C%20tenho%20interesse%20nos%20perfumes%2C%20quais%20est%C3%A3o%20dispon%C3%ADveis%3F" target="_blank" rel="noopener" aria-label="Chamar no WhatsApp" title="Chamar no WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
       <h1><span class="h1-a">Menu</span><span class="h1-b">de Perfumes</span></h1>
       <p class="sub"><span>Seleção com preço especial</span></p>
     </header>
@@ -791,7 +924,7 @@
       <h2 class="sec-t"><span>Masculino</span></h2>
 
       <article class="item">
-        <div class="frame-wrap">
+        <div class="frame-wrap" data-perfil="rabanne-million-gold-elixir">
           <div class="frame">
             <img class="wb-million" src="img/million-gold.png" alt="One Million Gold Elixir" style="--w:129.1%; --l:-14.75%; --b:-8.9%">
           </div>
@@ -811,7 +944,7 @@
       <h2 class="sec-t"><span>Feminino</span></h2>
 
       <article class="item esgotado">
-        <div class="frame-wrap">
+        <div class="frame-wrap" data-perfil="ch-212-vip-rose">
           <div class="frame">
             <img class="wb-212" src="img/212-vip-rose.png" alt="212 VIP Rosé (esgotado)" style="--w:82.4%; --l:8.39%; --b:4.1%">
           </div>
@@ -828,7 +961,7 @@
       </article>
 
       <article class="item esgotado">
-        <div class="frame-wrap">
+        <div class="frame-wrap" data-perfil="lancome-la-vie-est-belle-elixir">
           <div class="frame">
             <!-- a caixa vem cortada na borda de baixo do arquivo: foto rente à base da moldura -->
             <img src="img/la-vie-est-belle.png" alt="La Vie Est Belle L’Elixir (esgotado)" style="--w:81.2%; --l:7.42%; --b:0%">
@@ -846,7 +979,7 @@
       </article>
 
       <article class="item esgotado">
-        <div class="frame-wrap">
+        <div class="frame-wrap" data-perfil="ch-ch-2015">
           <div class="frame">
             <img class="wb-ch" src="img/ch.png" alt="CH Carolina Herrera (esgotado)" style="--w:100%; --l:2%; --b:10%">
           </div>
@@ -863,7 +996,7 @@
       </article>
 
       <article class="item esgotado">
-        <div class="frame-wrap">
+        <div class="frame-wrap" data-perfil="ch-good-girl-jasmine-absolute">
           <div class="frame">
             <img src="img/good-girl-hd.png" alt="Good Girl Jasmine Absolute (esgotado)" style="--w:86.2%; --l:8.2%; --b:-2.9%">
           </div>
@@ -890,7 +1023,7 @@
         <h2 class="sec-t"><span>Masculino</span></h2>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="rabanne-invictus-parfum">
             <div class="frame foto">
               <img src="img/invictus-parfum-2.png" alt="Invictus Parfum Rabanne" style="--pos:50% 50%">
             </div>
@@ -907,7 +1040,7 @@
         </article>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="rabanne-invictus-parfum">
             <div class="frame foto">
               <img src="img/invictus-parfum-2.png" alt="Invictus Parfum Rabanne" style="--pos:50% 50%">
             </div>
@@ -924,7 +1057,7 @@
         </article>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="givenchy-gentleman-2017">
             <div class="frame foto">
               <img class="realce" src="img/gentleman-edt.webp" alt="Gentleman Eau de Toilette Givenchy, frasco tester" style="--pos:50% 45%">
             </div>
@@ -942,7 +1075,7 @@
 
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="hugo-jeans">
             <div class="frame foto">
               <!-- foto escolhida pelo Fernando (05/11/2026): frasco na frente das letras HUGO vermelhas -->
               <img src="img/hugo-jeans-2.png" alt="Hugo Jeans Hugo Boss" style="--pos:50% 50%">
@@ -960,7 +1093,7 @@
         </article>
 
         <article class="item esgotado">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="boss-bottled-night">
             <div class="frame foto">
               <img src="img/boss-bottled-night.png" alt="Boss Bottled Night Hugo Boss (esgotado)" style="--pos:50% 50%">
             </div>
@@ -978,7 +1111,7 @@
         </article>
 
         <article class="item esgotado">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="jpg-ultra-male">
             <div class="frame foto">
               <img src="img/ultra-male.png" alt="Ultra Male Jean Paul Gaultier (esgotado)" style="--pos:50% 55%">
             </div>
@@ -1001,7 +1134,7 @@
 
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="jpg-classique">
             <div class="frame foto">
               <img src="img/jpg-classique.png" alt="Classique Jean Paul Gaultier" style="--pos:27% 50%">
             </div>
@@ -1018,7 +1151,7 @@
         </article>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="ch-212-vip-rose">
             <div class="frame foto">
               <img src="img/212-vip-rose-80.png" alt="212 VIP Rosé Carolina Herrera, frasco tester" style="--pos:50% 50%">
             </div>
@@ -1035,7 +1168,7 @@
         </article>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="ysl-libre">
             <div class="frame">
               <img src="img/ysl-libre.png" alt="Libre Yves Saint Laurent, frasco sem caixa" style="--w:45.5%; --l:27.2%; --b:5.2%">
             </div>
@@ -1052,7 +1185,7 @@
         </article>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="rabanne-lady-million-fabulous">
             <div class="frame foto">
               <img src="img/lady-million-fabulous.png" alt="Lady Million Fabulous Rabanne" style="--pos:50% 50%">
             </div>
@@ -1069,7 +1202,7 @@
         </article>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="rabanne-lady-million-royal">
             <div class="frame">
               <!-- foto oficial rabanne.com (fundo clareado pra branco), já na proporção da moldura -->
               <img src="img/lady-million-royal.png" alt="Lady Million Royal Rabanne, frasco" style="--w:100%; --l:0%; --b:0%">
@@ -1087,7 +1220,7 @@
         </article>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="rabanne-lady-million-empire">
             <div class="frame foto">
               <img src="img/lady-million-empire.png" alt="Lady Million Empire Rabanne" style="--pos:50% 50%">
             </div>
@@ -1104,7 +1237,7 @@
         </article>
 
         <article class="item esgotado">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="jpg-gaultier-divine">
             <div class="frame foto">
               <img src="img/gaultier-divine.webp" alt="Gaultier Divine Jean Paul Gaultier (esgotado)" style="--pos:50% 38%">
             </div>
@@ -1122,7 +1255,7 @@
         </article>
 
         <article class="item esgotado">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="ysl-libre">
             <div class="frame">
               <!-- vendido sem caixa: a foto mostra só o frasco -->
               <img src="img/ysl-libre.png" alt="Libre Yves Saint Laurent, frasco sem caixa (esgotado)" style="--w:45.5%; --l:27.2%; --b:5.2%">
@@ -1144,7 +1277,7 @@
         <h2 class="sec-t"><span>Unissex</span></h2>
 
         <article class="item">
-          <div class="frame-wrap">
+          <div class="frame-wrap" data-perfil="dg-light-blue">
             <div class="frame foto">
               <img src="img/light-blue.png" alt="Light Blue Dolce &amp; Gabbana" style="--pos:50% 50%">
             </div>
@@ -1187,9 +1320,16 @@
 <!-- foto ampliada (abre ao tocar na foto de um perfume) -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
   <button class="lb-fechar" type="button" aria-label="Fechar foto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-  <div class="lb-quadro"><img alt=""></div>
-  <div class="lb-cap"></div>
+  <div class="lb-corpo">
+    <div class="lb-col">
+      <div class="lb-quadro"><img alt=""></div>
+      <div class="lb-cap"></div>
+    </div>
+    <section class="lb-info" aria-label="Características do perfume" hidden></section>
+  </div>
 </div>
+<!-- perfil olfativo de cada perfume (acordes + pirâmide), tirado do Fragrantica com o perfil.ps1; o item liga pelo data-perfil -->
+<script type="application/json" id="perfis">{"ysl-libre":{"fonte":"https://www.fragrantica.com.br/perfume/Yves-Saint-Laurent/Libre-56077.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"cítrico","forca":81,"cor":"#F9FF52"},{"nome":"lavanda","forca":75,"cor":"#9B7DB8"},{"nome":"baunilha","forca":64,"cor":"#FFFEC0"},{"nome":"aromático","forca":57,"cor":"#37A089"},{"nome":"doce","forca":56,"cor":"#EE363B"},{"nome":"atalcado","forca":53,"cor":"#EEDDCC"},{"nome":"animálico","forca":52,"cor":"#8E4B13"},{"nome":"almíscarado","forca":50,"cor":"#E7D8EA"},{"nome":"amadeirado","forca":50,"cor":"#774414"}],"notas":{"topo":["Lavanda","Mandarina","Groselha Preta","Petitgrain"],"coracao":["Lavanda","Flor de Laranjeira","Jasmim"],"fundo":["Baunilha de Madagascar","Almíscar","Cedro","Âmbar Cinzento"]},"quando":[{"nome":"Inverno","forca":82,"cor":"#78D6F0","votos":"6,8 mil"},{"nome":"Primavera","forca":76,"cor":"#9FE584","votos":"6,3 mil"},{"nome":"Verão","forca":46,"cor":"#FC958A","votos":"3,8 mil"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"8,3 mil"},{"nome":"Dia","forca":90,"cor":"#F59E0B","votos":"7,5 mil"},{"nome":"Noite","forca":83,"cor":"#8BB8D4","votos":"6,9 mil"}]},"rabanne-million-gold-elixir":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Million-Gold-Elixir-102755.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"amadeirado","forca":85,"cor":"#774414"},{"nome":"atalcado","forca":79,"cor":"#EEDDCC"},{"nome":"cítrico","forca":66,"cor":"#F9FF52"},{"nome":"especiado quente","forca":52,"cor":"#CC3300"},{"nome":"balsâmico","forca":52,"cor":"#AD8359"},{"nome":"doce","forca":48,"cor":"#EE363B"}],"notas":{"topo":["Mandarina Amarela"],"coracao":["Sândalo"],"fundo":["Baunilha"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"506"},{"nome":"Primavera","forca":45,"cor":"#9FE584","votos":"226"},{"nome":"Verão","forca":14,"cor":"#FC958A","votos":"69"},{"nome":"Outono","forca":90,"cor":"#F9BE6E","votos":"457"},{"nome":"Dia","forca":53,"cor":"#F59E0B","votos":"267"},{"nome":"Noite","forca":88,"cor":"#8BB8D4","votos":"446"}]},"lancome-la-vie-est-belle-elixir":{"fonte":"https://www.fragrantica.com.br/perfume/Lancome/La-Vie-est-Belle-L-Elixir-95856.html","acordes":[{"nome":"frutado","forca":100,"cor":"#FC4B29"},{"nome":"doce","forca":79,"cor":"#EE363B"},{"nome":"ozônico","forca":79,"cor":"#C9FDFB"},{"nome":"rosa","forca":70,"cor":"#FE016B"},{"nome":"aquático","forca":66,"cor":"#63CCE2"},{"nome":"couro","forca":62,"cor":"#78483A"},{"nome":"álcool","forca":49,"cor":"#F8EA8C"},{"nome":"verde","forca":47,"cor":"#0E8C1D"},{"nome":"animálico","forca":46,"cor":"#8E4B13"},{"nome":"cítrico","forca":45,"cor":"#F9FF52"}],"notas":{"topo":["Framboesa","Licor","Bergamota da Calábria"],"coracao":["Folha de Violeta","Rosa"],"fundo":["Couro","Manteiga de Cacau","Cedro"]},"quando":[{"nome":"Inverno","forca":96,"cor":"#78D6F0","votos":"1,3 mil"},{"nome":"Primavera","forca":83,"cor":"#9FE584","votos":"1,1 mil"},{"nome":"Verão","forca":44,"cor":"#FC958A","votos":"589"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":91,"cor":"#F59E0B","votos":"1,2 mil"},{"nome":"Noite","forca":93,"cor":"#8BB8D4","votos":"1,3 mil"}]},"ch-ch-2015":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/CH-2015-31507.html","acordes":[{"nome":"cítrico","forca":100,"cor":"#F9FF52"},{"nome":"amadeirado","forca":68,"cor":"#774414"},{"nome":"floral branco","forca":59,"cor":"#EDF2FB"},{"nome":"couro","forca":56,"cor":"#78483A"},{"nome":"doce","forca":53,"cor":"#EE363B"},{"nome":"animálico","forca":49,"cor":"#8E4B13"},{"nome":"aromático","forca":49,"cor":"#37A089"},{"nome":"atalcado","forca":48,"cor":"#EEDDCC"},{"nome":"patchouli","forca":47,"cor":"#63652E"},{"nome":"fresco especiado","forca":47,"cor":"#83C928"}],"notas":{"topo":["Toranja","Bergamota","Limão"],"coracao":["Flor de Laranjeira","Rosa","Jasmim"],"fundo":["Couro","Patchouli","Pralinê","Almíscar","Sândalo","Cedro"]},"quando":[{"nome":"Inverno","forca":75,"cor":"#78D6F0","votos":"337"},{"nome":"Primavera","forca":78,"cor":"#9FE584","votos":"347"},{"nome":"Verão","forca":46,"cor":"#FC958A","votos":"207"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"447"},{"nome":"Dia","forca":99,"cor":"#F59E0B","votos":"441"},{"nome":"Noite","forca":83,"cor":"#8BB8D4","votos":"372"}]},"ch-good-girl-jasmine-absolute":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/Good-Girl-Jasmine-Absolute-120291.html","acordes":[{"nome":"doce","forca":100,"cor":"#EE363B"},{"nome":"floral branco","forca":70,"cor":"#EDF2FB"},{"nome":"amêndoa","forca":61,"cor":"#F1E3C5"},{"nome":"frutado","forca":61,"cor":"#FC4B29"},{"nome":"baunilha","forca":56,"cor":"#FFFEC0"},{"nome":"caramelo","forca":52,"cor":"#DDA356"},{"nome":"âmbar","forca":49,"cor":"#BC4D10"},{"nome":"amendoado","forca":48,"cor":"#B4955F"},{"nome":"floral","forca":47,"cor":"#FF5F8D"}],"notas":{"topo":["Groselha Preta","Mandarina"],"coracao":["Jasmim","Amêndoa Amarga"],"fundo":["Toffee","Fava Tonka"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"586"},{"nome":"Primavera","forca":55,"cor":"#9FE584","votos":"324"},{"nome":"Verão","forca":24,"cor":"#FC958A","votos":"141"},{"nome":"Outono","forca":98,"cor":"#F9BE6E","votos":"577"},{"nome":"Dia","forca":61,"cor":"#F59E0B","votos":"356"},{"nome":"Noite","forca":99,"cor":"#8BB8D4","votos":"582"}]},"rabanne-invictus-parfum":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Invictus-Parfum-90433.html","acordes":[{"nome":"almíscarado","forca":100,"cor":"#E7D8EA"},{"nome":"aromático","forca":98,"cor":"#37A089"},{"nome":"marinho","forca":89,"cor":"#0E529B"},{"nome":"saboneteado","forca":89,"cor":"#E3F6FC"},{"nome":"atalcado","forca":82,"cor":"#EEDDCC"},{"nome":"amadeirado","forca":79,"cor":"#774414"},{"nome":"lavanda","forca":75,"cor":"#9B7DB8"},{"nome":"aquático","forca":66,"cor":"#63CCE2"},{"nome":"ozônico","forca":54,"cor":"#C9FDFB"},{"nome":"salgado","forca":53,"cor":"#E9FFF9"}],"notas":{"topo":["Notas marinhas","Lavanda","Pimenta Rosa"],"coracao":["Sabão","Folha de Violeta","Murta"],"fundo":["Almíscar","Cashmeran","Sândalo"]},"quando":[{"nome":"Inverno","forca":38,"cor":"#78D6F0","votos":"821"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"2,1 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"2,1 mil"},{"nome":"Outono","forca":83,"cor":"#F9BE6E","votos":"1,8 mil"},{"nome":"Dia","forca":97,"cor":"#F59E0B","votos":"2,1 mil"},{"nome":"Noite","forca":78,"cor":"#8BB8D4","votos":"1,7 mil"}]},"givenchy-gentleman-2017":{"fonte":"https://www.fragrantica.com.br/perfume/Givenchy/Gentleman-2017-46040.html","acordes":[{"nome":"íris","forca":100,"cor":"#B7A7D7"},{"nome":"frutado","forca":96,"cor":"#FC4B29"},{"nome":"doce","forca":87,"cor":"#EE363B"},{"nome":"atalcado","forca":82,"cor":"#EEDDCC"},{"nome":"especiado quente","forca":80,"cor":"#CC3300"},{"nome":"aromático","forca":79,"cor":"#37A089"},{"nome":"lavanda","forca":78,"cor":"#9B7DB8"},{"nome":"couro","forca":69,"cor":"#78483A"},{"nome":"terroso","forca":68,"cor":"#544838"},{"nome":"violeta","forca":65,"cor":"#9C1DFF"}],"notas":{"topo":["Pera","Cardamomo","Abacaxi"],"coracao":["Íris","Lavanda","Gerânio"],"fundo":["Couro","Casca de Baunilha Negra","Patchouli"]},"quando":[{"nome":"Inverno","forca":56,"cor":"#78D6F0","votos":"812"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"1,4 mil"},{"nome":"Verão","forca":60,"cor":"#FC958A","votos":"862"},{"nome":"Outono","forca":96,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":96,"cor":"#F59E0B","votos":"1,4 mil"},{"nome":"Noite","forca":72,"cor":"#8BB8D4","votos":"1 mil"}]},"hugo-jeans":{"fonte":"https://www.fragrantica.com.br/perfume/Hugo-Boss/Hugo-Jeans-Man-78426.html","acordes":[{"nome":"aromático","forca":100,"cor":"#37A089"},{"nome":"amadeirado","forca":82,"cor":"#774414"},{"nome":"fresco especiado","forca":79,"cor":"#83C928"},{"nome":"cítrico","forca":77,"cor":"#F9FF52"},{"nome":"verde","forca":63,"cor":"#0E8C1D"}],"notas":{"topo":["Toranja","Lima"],"coracao":["Bagas de Zimbro","Hortelã"],"fundo":["Cedro","Vetiver"]},"quando":[{"nome":"Inverno","forca":20,"cor":"#78D6F0","votos":"41"},{"nome":"Primavera","forca":98,"cor":"#9FE584","votos":"204"},{"nome":"Verão","forca":93,"cor":"#FC958A","votos":"193"},{"nome":"Outono","forca":49,"cor":"#F9BE6E","votos":"102"},{"nome":"Dia","forca":100,"cor":"#F59E0B","votos":"208"},{"nome":"Noite","forca":23,"cor":"#8BB8D4","votos":"48"}]},"boss-bottled-night":{"fonte":"https://www.fragrantica.com.br/perfume/Hugo-Boss/Boss-Bottled-Night-8825.html","acordes":[{"nome":"amadeirado","forca":100,"cor":"#774414"},{"nome":"violeta","forca":95,"cor":"#9C1DFF"},{"nome":"atalcado","forca":94,"cor":"#EEDDCC"},{"nome":"lavanda","forca":82,"cor":"#9B7DB8"},{"nome":"couro","forca":75,"cor":"#78483A"},{"nome":"almíscarado","forca":67,"cor":"#E7D8EA"},{"nome":"defumado","forca":66,"cor":"#827487"},{"nome":"floral","forca":55,"cor":"#FF5F8D"},{"nome":"aromático","forca":51,"cor":"#37A089"},{"nome":"fresco especiado","forca":46,"cor":"#83C928"}],"notas":{"topo":["Lavanda","Bétula"],"coracao":["Violeta"],"fundo":["Notas Amadeiradas","Almíscar"]},"quando":[{"nome":"Inverno","forca":66,"cor":"#78D6F0","votos":"1,6 mil"},{"nome":"Primavera","forca":75,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":42,"cor":"#FC958A","votos":"1 mil"},{"nome":"Outono","forca":81,"cor":"#F9BE6E","votos":"2 mil"},{"nome":"Dia","forca":47,"cor":"#F59E0B","votos":"1,2 mil"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"2,4 mil"}]},"jpg-ultra-male":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Ultra-Male-30947.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"frutado","forca":80,"cor":"#FC4B29"},{"nome":"aromático","forca":80,"cor":"#37A089"},{"nome":"doce","forca":79,"cor":"#EE363B"},{"nome":"canela","forca":70,"cor":"#D2691E"},{"nome":"especiado quente","forca":69,"cor":"#CC3300"},{"nome":"fresco especiado","forca":64,"cor":"#83C928"},{"nome":"lavanda","forca":63,"cor":"#9B7DB8"},{"nome":"atalcado","forca":59,"cor":"#EEDDCC"},{"nome":"verde","forca":59,"cor":"#0E8C1D"}],"notas":{"topo":["Pera","Lavanda","Hortelã","Bergamota","Limão"],"coracao":["Canela","Sálvia Esclaréia","Alcarávia"],"fundo":["Casca de Baunilha Negra","Âmbar","Patchouli","Cedro"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"11,1 mil"},{"nome":"Primavera","forca":53,"cor":"#9FE584","votos":"5,9 mil"},{"nome":"Verão","forca":26,"cor":"#FC958A","votos":"2,8 mil"},{"nome":"Outono","forca":88,"cor":"#F9BE6E","votos":"9,7 mil"},{"nome":"Dia","forca":38,"cor":"#F59E0B","votos":"4,2 mil"},{"nome":"Noite","forca":99,"cor":"#8BB8D4","votos":"11 mil"}]},"jpg-classique":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Classique-427.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"doce","forca":98,"cor":"#EE363B"},{"nome":"atalcado","forca":97,"cor":"#EEDDCC"},{"nome":"cítrico","forca":87,"cor":"#F9FF52"},{"nome":"baunilha","forca":75,"cor":"#FFFEC0"},{"nome":"floral","forca":72,"cor":"#FF5F8D"},{"nome":"picante suave","forca":72,"cor":"#E27752"},{"nome":"anis","forca":66,"cor":"#C3D7B3"},{"nome":"amadeirado","forca":62,"cor":"#774414"},{"nome":"floral amarelo","forca":62,"cor":"#FFDC10"}],"notas":{"topo":["Flor de Laranjeira","Anis Estrelado","Rosa","Mandarina","Pera","Bergamota"],"coracao":["Ylang Ylang","Gengibre","Orquídea","Tuberosa","Íris","Ameixa"],"fundo":["Baunilha","Âmbar","Almíscar","Canela","Sândalo"]},"quando":[{"nome":"Inverno","forca":92,"cor":"#78D6F0","votos":"3,4 mil"},{"nome":"Primavera","forca":49,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":30,"cor":"#FC958A","votos":"1,1 mil"},{"nome":"Outono","forca":87,"cor":"#F9BE6E","votos":"3,2 mil"},{"nome":"Dia","forca":68,"cor":"#F59E0B","votos":"2,5 mil"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"3,6 mil"}]},"rabanne-lady-million-fabulous":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Fabulous-66336.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"floral branco","forca":81,"cor":"#EDF2FB"},{"nome":"doce","forca":70,"cor":"#EE363B"},{"nome":"tuberosa","forca":62,"cor":"#EBFAF3"},{"nome":"floral amarelo","forca":51,"cor":"#FFDC10"},{"nome":"cítrico","forca":48,"cor":"#F9FF52"},{"nome":"âmbar","forca":48,"cor":"#BC4D10"},{"nome":"aldeídico","forca":47,"cor":"#D8E9F6"},{"nome":"picante suave","forca":46,"cor":"#E27752"}],"notas":{"topo":["Mandarina","Pimenta Rosa"],"coracao":["Tuberosa","Notas Solares","Jasmim","Ylang Ylang"],"fundo":["Baunilha","Fava Tonka","Musgo"]},"quando":[{"nome":"Inverno","forca":92,"cor":"#78D6F0","votos":"335"},{"nome":"Primavera","forca":48,"cor":"#9FE584","votos":"175"},{"nome":"Verão","forca":33,"cor":"#FC958A","votos":"120"},{"nome":"Outono","forca":95,"cor":"#F9BE6E","votos":"346"},{"nome":"Dia","forca":60,"cor":"#F59E0B","votos":"220"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"365"}]},"rabanne-lady-million-royal":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Royal-79160.html","acordes":[{"nome":"amadeirado","forca":100,"cor":"#774414"},{"nome":"floral branco","forca":88,"cor":"#EDF2FB"},{"nome":"frutado","forca":53,"cor":"#FC4B29"},{"nome":"fresco especiado","forca":49,"cor":"#83C928"},{"nome":"azedo","forca":44,"cor":"#C0E741"}],"notas":{"topo":["Romã"],"coracao":["Flores Brancas"],"fundo":["Notas Amadeiradas"]},"quando":[{"nome":"Inverno","forca":88,"cor":"#78D6F0","votos":"184"},{"nome":"Primavera","forca":74,"cor":"#9FE584","votos":"154"},{"nome":"Verão","forca":36,"cor":"#FC958A","votos":"76"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"209"},{"nome":"Dia","forca":80,"cor":"#F59E0B","votos":"167"},{"nome":"Noite","forca":85,"cor":"#8BB8D4","votos":"177"}]},"jpg-gaultier-divine":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Gaultier-Divine-83889.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"doce","forca":87,"cor":"#EE363B"},{"nome":"aquático","forca":76,"cor":"#63CCE2"},{"nome":"marinho","forca":72,"cor":"#0E529B"},{"nome":"aromático","forca":59,"cor":"#37A089"},{"nome":"atalcado","forca":59,"cor":"#EEDDCC"},{"nome":"floral amarelo","forca":52,"cor":"#FFDC10"},{"nome":"salgado","forca":47,"cor":"#E9FFF9"},{"nome":"almíscarado","forca":46,"cor":"#E7D8EA"},{"nome":"amadeirado","forca":45,"cor":"#774414"}],"notas":{"topo":["Calypsone®","Bergamota","Bagas Vermelhas"],"coracao":["Lírio","Ylang Ylang","Jasmim"],"fundo":["Merengue","Almíscar","Patchouli"]},"quando":[{"nome":"Inverno","forca":39,"cor":"#78D6F0","votos":"815"},{"nome":"Primavera","forca":88,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"2,1 mil"},{"nome":"Outono","forca":58,"cor":"#F9BE6E","votos":"1,2 mil"},{"nome":"Dia","forca":99,"cor":"#F59E0B","votos":"2,1 mil"},{"nome":"Noite","forca":58,"cor":"#8BB8D4","votos":"1,2 mil"}]},"dg-light-blue":{"fonte":"https://www.fragrantica.com.br/perfume/Dolce-Gabbana/Light-Blue-485.html","acordes":[{"nome":"cítrico","forca":100,"cor":"#F9FF52"},{"nome":"amadeirado","forca":74,"cor":"#774414"},{"nome":"fresco","forca":63,"cor":"#9BE5ED"},{"nome":"frutado","forca":59,"cor":"#FC4B29"},{"nome":"aromático","forca":54,"cor":"#37A089"},{"nome":"almíscarado","forca":50,"cor":"#E7D8EA"},{"nome":"atalcado","forca":47,"cor":"#EEDDCC"},{"nome":"verde","forca":44,"cor":"#0E8C1D"}],"notas":{"topo":["Limão Siciliano","Maçã","Cedro","Câmpanula"],"coracao":["Bambu","Jasmim","Rosa Branca"],"fundo":["Cedro","Almíscar","Âmbar"]},"quando":[{"nome":"Inverno","forca":11,"cor":"#78D6F0","votos":"1,8 mil"},{"nome":"Primavera","forca":55,"cor":"#9FE584","votos":"9,3 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"17,1 mil"},{"nome":"Outono","forca":12,"cor":"#F9BE6E","votos":"2,1 mil"},{"nome":"Dia","forca":94,"cor":"#F59E0B","votos":"16,1 mil"},{"nome":"Noite","forca":12,"cor":"#8BB8D4","votos":"2 mil"}]},"ch-212-vip-rose":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/212-VIP-Rose-22857.html","acordes":[{"nome":"floral","forca":100,"cor":"#FF5F8D"},{"nome":"almíscarado","forca":79,"cor":"#E7D8EA"},{"nome":"frutado","forca":67,"cor":"#FC4B29"},{"nome":"amadeirado","forca":66,"cor":"#774414"},{"nome":"atalcado","forca":53,"cor":"#EEDDCC"},{"nome":"rosa","forca":51,"cor":"#FE016B"}],"notas":{"topo":["Champanhe Rosé","Pimenta Rosa"],"coracao":["Flor de Pêssego","Rosa"],"fundo":["Almíscar Branco","Notas Amadeiradas"]},"quando":[{"nome":"Inverno","forca":47,"cor":"#78D6F0","votos":"934"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"2 mil"},{"nome":"Verão","forca":61,"cor":"#FC958A","votos":"1,2 mil"},{"nome":"Outono","forca":72,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":100,"cor":"#F59E0B","votos":"2 mil"},{"nome":"Noite","forca":81,"cor":"#8BB8D4","votos":"1,6 mil"}]},"rabanne-lady-million-empire":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Empire-55787.html","acordes":[{"nome":"frutado","forca":100,"cor":"#FC4B29"},{"nome":"doce","forca":76,"cor":"#EE363B"},{"nome":"amadeirado","forca":73,"cor":"#774414"},{"nome":"floral","forca":64,"cor":"#FF5F8D"},{"nome":"cítrico","forca":63,"cor":"#F9FF52"},{"nome":"fresco","forca":58,"cor":"#9BE5ED"},{"nome":"especiado quente","forca":58,"cor":"#CC3300"},{"nome":"picante suave","forca":53,"cor":"#E27752"},{"nome":"patchouli","forca":50,"cor":"#63652E"},{"nome":"floral branco","forca":49,"cor":"#EDF2FB"}],"notas":{"topo":["Groselha Vermelha","Laranja","Essência de Néroli"],"coracao":["Ameixa Mirabelle","Magnólia","Osmanthus","Flor de Laranjeira"],"fundo":["Conhaque","Patchouli","Almíscar Branco"]},"quando":[{"nome":"Inverno","forca":73,"cor":"#78D6F0","votos":"259"},{"nome":"Primavera","forca":63,"cor":"#9FE584","votos":"223"},{"nome":"Verão","forca":33,"cor":"#FC958A","votos":"116"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"354"},{"nome":"Dia","forca":86,"cor":"#F59E0B","votos":"304"},{"nome":"Noite","forca":81,"cor":"#8BB8D4","votos":"285"}]}}</script>
 <script>
   // abre direto na aba Testers quando o link termina em #testers, e mantém o endereço certo ao trocar de aba
   (function () {
@@ -1206,7 +1346,93 @@
     var lb = document.getElementById('lb');
     if (!lb) return;
     var quadro = lb.querySelector('.lb-quadro'), big = quadro.querySelector('img'), cap = lb.querySelector('.lb-cap'), fechar = lb.querySelector('.lb-fechar');
-    var origem = null, comHistorico = false;
+    var info = lb.querySelector('.lb-info');
+    var origem = null, comHistorico = false, perfis = {};
+    try { perfis = JSON.parse(document.getElementById('perfis').textContent || '{}') || {}; } catch (e) { perfis = {}; }
+
+    function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+    // monta o painel com DOM (textContent), nunca innerHTML: os textos vêm de outro site
+    function montarPerfil(p) {
+      info.textContent = '';
+      var ac = (p.acordes || []).filter(function (a) { return a && a.nome; });
+      if (ac.length) {
+        info.appendChild(el('p', 'lb-info-t', 'Principais acordes'));
+        var ul = el('ul', 'acordes');
+        ac.forEach(function (a) {
+          var li = el('li'), barra = el('span', 'ac-barra'), i = el('i');
+          var f = Math.max(4, Math.min(100, +a.forca || 0));
+          i.style.width = f + '%';
+          if (/^#[0-9a-f]{3,6}$/i.test(a.cor || '')) i.style.background = a.cor;
+          barra.appendChild(i);
+          li.appendChild(el('span', 'ac-nome', a.nome));
+          li.appendChild(barra);
+          ul.appendChild(li);
+        });
+        info.appendChild(ul);
+      }
+      var q = (p.quando || []).filter(function (x) { return x && x.nome; }), temQ = q.length > 0;
+      if (temQ) {
+        info.appendChild(el('p', 'lb-info-t', 'Quando usar'));
+        var uq = el('ul', 'quando');
+        var ehPer = function (x) { return /^(Dia|Noite)$/.test(x.nome); };
+        var maior = function (lista) { return Math.max.apply(null, lista.map(function (x) { return +x.forca || 0; }).concat([0])); };
+        var maxE = maior(q.filter(function (x) { return !ehPer(x); })), maxP = maior(q.filter(ehPer));
+        q.forEach(function (x) {
+          var per = ehPer(x), li = el('li', per ? 'periodo' : null);
+          var cor = /^#[0-9a-f]{6}$/i.test(x.cor || '') ? x.cor : null;
+          var f = Math.max(4, Math.min(100, +x.forca || 0));
+          var ico = icone(x.nome);
+          if ((+x.forca || 0) === (per ? maxP : maxE)) { li.classList.add('top'); if (cor && ico) ico.style.color = cor; }
+          if (ico) li.appendChild(ico);
+          li.appendChild(el('span', 'q-nome', x.nome));
+          var barra = el('span', 'q-barra'), i = el('i');
+          i.style.width = f + '%';
+          if (cor) i.style.background = cor;
+          barra.appendChild(i);
+          li.appendChild(barra);   // só a barra, sem o número de votos (pedido do Fernando, 05/11/2026)
+          uq.appendChild(li);
+        });
+        info.appendChild(uq);
+      }
+      var n = p.notas || {}, niveis = [['topo', 'Topo'], ['coracao', 'Coração'], ['fundo', 'Fundo'], ['notas', 'Notas']];
+      var dl = el('dl', 'piramide'), tem = false;
+      niveis.forEach(function (nv) {
+        var lista = n[nv[0]];
+        if (!lista || !lista.length) return;
+        var linha = el('div'), dd = el('dd');
+        linha.appendChild(el('dt', null, nv[1]));
+        lista.forEach(function (nome, k) { dd.appendChild(el('span', k === 0 ? 'nota forte' : 'nota', nome)); });
+        linha.appendChild(dd);
+        dl.appendChild(linha);
+        tem = true;
+      });
+      if (tem) { info.appendChild(el('p', 'lb-info-t', 'Pirâmide olfativa')); info.appendChild(dl); }
+      if (/^https:\/\/www\.fragrantica\.com\.br\//.test(p.fonte || '')) {
+        var a = el('a', 'lb-fonte', 'Fonte: Fragrantica');
+        a.href = p.fonte; a.target = '_blank'; a.rel = 'noopener';
+        info.appendChild(a);
+      }
+      return ac.length > 0 || tem || temQ;
+    }
+    // ícones próprios (traço simples) pras estações e pro dia/noite
+    var ICONES = {
+      'Inverno': 'M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5',
+      'Primavera': 'M12 21v-9M12 12c0-3.9 3.1-7 7-7 0 3.9-3.1 7-7 7zM12 14.5c0-3-2.5-5.5-5.5-5.5 0 3 2.5 5.5 5.5 5.5z',
+      'Verão': 'M3 12a9 9 0 0 1 18 0H3zM12 12v6.5a2 2 0 0 1-4 0',
+      'Outono': 'M5 19c0-8.3 5.4-14 14-14 0 8.6-5.7 14-14 14zM5 19l8-8',
+      'Dia': 'M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 2.5V5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8',
+      'Noite': 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z'
+    };
+    function icone(nome) {
+      var d = ICONES[nome];
+      if (!d) return null;
+      var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'), path = document.createElementNS(ns, 'path');
+      svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('class', 'q-ico'); svg.setAttribute('aria-hidden', 'true');
+      path.setAttribute('d', d); path.setAttribute('fill', 'none'); path.setAttribute('stroke', 'currentColor');
+      path.setAttribute('stroke-width', '1.6'); path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round');
+      svg.appendChild(path);
+      return svg;
+    }
 
     function abrir(wrap) {
       var img = wrap.querySelector('.frame img'), item = wrap.closest('.item');
@@ -1226,8 +1452,17 @@
         var esg = document.createElement('span'); esg.textContent = 'Esgotado'; cond.appendChild(esg);
       }
       if (cond) cap.appendChild(cond);
+      var p = perfis[wrap.getAttribute('data-perfil') || ''];   // <div class="frame-wrap" data-perfil="...">
+      var comPerfil = false;
+      try { comPerfil = !!(p && montarPerfil(p)); } catch (e) { comPerfil = false; }   // dado estranho no perfil nunca impede a foto de abrir
+      info.hidden = !comPerfil;
+      if (!comPerfil) info.textContent = '';
+      lb.classList.toggle('tem-perfil', comPerfil);
+      lb.setAttribute('aria-label', comPerfil ? 'Foto e características do perfume' : 'Foto ampliada');
       origem = wrap;
       lb.hidden = false;
+      lb.scrollTop = 0;
+      if (comPerfil) info.scrollTop = 0;
       document.documentElement.classList.add('lb-on');
       try { history.pushState({ lb: 1 }, ''); comHistorico = true; } catch (e) { comHistorico = false; }
       fechar.focus({ preventScroll: true });
@@ -1253,10 +1488,18 @@
       wrap.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(wrap); } });
     });
     lb.addEventListener('click', function () { fecharLb(false); });
+    // tocar no painel (pra ler/rolar) nao fecha; o link da fonte continua funcionando
+    info.addEventListener('click', function (e) { e.stopPropagation(); });
     document.addEventListener('keydown', function (e) {
       if (lb.hidden) return;
       if (e.key === 'Escape') { e.preventDefault(); fecharLb(false); }
-      else if (e.key === 'Tab') { e.preventDefault(); fechar.focus(); }
+      else if (e.key === 'Tab') {
+        // foco preso no X e no link da fonte (quando tem painel)
+        var alvos = [fechar].concat(info.hidden ? [] : [].slice.call(info.querySelectorAll('a[href]')));
+        var k = alvos.indexOf(document.activeElement);
+        e.preventDefault();
+        alvos[(k + (e.shiftKey ? alvos.length - 1 : 1)) % alvos.length].focus();
+      }
     });
     addEventListener('popstate', function () { if (!lb.hidden) fecharLb(true); });
   })();
