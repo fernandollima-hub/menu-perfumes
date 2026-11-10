@@ -672,9 +672,15 @@
 
   /* ---------- foto ampliada: tocar/clicar na foto abre ela grande na tela ----------
      (só no site/HTML; o script liga isso ao carregar, então as imagens do WhatsApp e o PDF ficam iguais) */
-  .frame-wrap[role="button"] { cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
-  .frame-wrap[role="button"]:focus { outline: none; }
-  .frame-wrap[role="button"]:focus-visible .frame { outline: 2px solid var(--gold-bright); }
+  /* o card inteiro (foto + texto) abre a foto ampliada com preço e botão de comprar */
+  .item[role="button"] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .item[role="button"]:focus { outline: none; }
+  .item[role="button"]:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 6px; }
+  .item[role="button"] .frame-wrap { transition: transform 0.18s ease; }
+  @media (hover: hover) {
+    .item[role="button"]:hover .frame-wrap { transform: scale(1.03); }
+  }
+  @media (prefers-reduced-motion: reduce) { .item[role="button"] .frame-wrap { transition: none; } }
   html.lb-on, html.lb-on body { overflow: hidden; }
   .lb {
     position: fixed;
@@ -774,7 +780,7 @@
   .lb.tem-perfil .lb-quadro img { max-height: 46vh; max-height: 46dvh; }
   @media (min-width: 780px) {
     .lb.tem-perfil .lb-corpo { flex-direction: row; justify-content: center; align-items: center; gap: 40px; max-width: 1040px; }
-    .lb.tem-perfil .lb-quadro img { max-width: min(44vw, 520px); max-height: calc(100vh - 230px); max-height: calc(100dvh - 230px); }
+    .lb.tem-perfil .lb-quadro img { max-width: min(44vw, 520px); max-height: calc(100vh - 330px); max-height: calc(100dvh - 330px); }
     .lb.tem-perfil .lb-info { width: 380px; flex: none; max-height: calc(100vh - 96px); max-height: calc(100dvh - 96px); overflow-y: auto; }
   }
   @keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
@@ -796,12 +802,53 @@
     width: auto;
     height: auto;
     max-width: min(88vw, 620px);
-    max-height: calc(100vh - 230px);
-    max-height: calc(100dvh - 230px);
+    max-height: calc(100vh - 330px);    /* sobra espaço pra legenda, preço e botão de comprar */
+    max-height: calc(100dvh - 330px);
   }
   .lb-cap { max-width: min(88vw, 620px); text-align: center; }
   .lb-cap .name { font-size: 24px; }
   .lb-cap .cond { justify-content: center; }
+  /* preço e botão "Comprar" (WhatsApp com mensagem do perfume) */
+  .lb-preco { margin: 12px 0 0; display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 4px 10px; font-family: var(--sans); }
+  .lb-de { font-size: 14px; color: var(--muted); }
+  .lb-de s { text-decoration-thickness: 1px; }
+  .lb-por { font-family: var(--display); font-size: 32px; font-weight: 600; line-height: 1; color: var(--gold-bright); font-variant-numeric: lining-nums; }
+  .lb-por small { margin-right: 3px; font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--gold); }
+  .lb-off {
+    align-self: center;
+    padding: 3px 9px 2px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 34% 28%, var(--seal-hi) 0%, var(--seal) 48%, var(--seal-lo) 100%);
+    color: var(--seal-ink);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .lb-preco.esg .lb-por { color: var(--muted); }
+  .lb-preco.esg .lb-off { display: none; }
+  .lb-comprar {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 24px 10px 20px;
+    border-radius: 999px;
+    background: var(--wa);
+    color: var(--wa-ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 10px 22px -12px rgba(37, 211, 102, 0.8);
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .lb-comprar svg { width: 20px; height: 20px; flex: none; }
+  @media (hover: hover) { .lb-comprar:hover { transform: scale(1.05); filter: brightness(1.05); } }
+  .lb-comprar:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .lb-comprar { transition: none; } }
   .lb-fechar {
     position: fixed;                  /* fica no canto mesmo rolando o painel no celular */
     z-index: 1;
@@ -824,9 +871,13 @@
   @media (max-height: 520px) {
     .lb { gap: 10px; padding: 14px 68px; }
     .lb-corpo, .lb-col { gap: 10px; }
-    .lb-quadro img { max-height: calc(100vh - 118px); max-height: calc(100dvh - 118px); }
+    .lb-quadro img { max-height: calc(100vh - 60px); max-height: calc(100dvh - 60px); }
+    .lb-col { flex-direction: row; align-items: center; gap: 22px; }   /* deitado: legenda, preço e botão do lado da foto */
     .lb-cap .name { font-size: 19px; margin-top: 2px; }
     .lb-cap .cond { margin-top: 5px; }
+    .lb-preco { margin-top: 8px; }
+    .lb-por { font-size: 26px; }
+    .lb-comprar { margin-top: 10px; padding: 9px 18px 8px 16px; font-size: 14px; }
   }
 
   /* ---------- tela larga: só mais respiro em volta ---------- */
@@ -1070,6 +1121,75 @@
             <p class="de"><i>de</i> <s>R$&nbsp;500,00</s></p>
             <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>250,00</span></p>
             <p class="save"><span>Economize</span> R$&nbsp;250,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap" data-perfil="armani-acqua-di-gio-profondo">
+            <div class="frame">
+              <!-- PNG transparente do Fernando, ja na proporcao da moldura -->
+              <img src="img/acqua-di-gio-profondo.png" alt="Acqua di Giò Profondo Giorgio Armani" style="--w:100%; --l:0%; --b:0%">
+            </div>
+            <div class="seal"><b>43<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Giorgio Armani <span class="vol"><span class="sep"></span>125 ml</span></p>
+            <h3 class="name">Acqua di Giò Profondo</h3>
+            <p class="cond"><span>90% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;797,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>450,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;347,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap" data-perfil="rabanne-phantom">
+            <div class="frame foto">
+              <img src="img/phantom.webp" alt="Phantom Rabanne" style="--pos:50% 50%">
+            </div>
+            <div class="seal"><b>54<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Rabanne <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">Phantom</h3>
+            <p class="cond"><span>70% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;659,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>299,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;360,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap" data-perfil="ch-212-sexy-men">
+            <div class="frame foto">
+              <img src="img/212-sexy-men.png" alt="212 Sexy Men Carolina Herrera" style="--pos:50% 50%">
+            </div>
+            <div class="seal"><b>59<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Carolina Herrera <span class="vol"><span class="sep"></span>100 ml</span></p>
+            <h3 class="name">212 Sexy Men</h3>
+            <p class="cond"><span>65% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;499,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>200,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;299,00</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="frame-wrap" data-perfil="jpg-ultra-male">
+            <div class="frame foto">
+              <img src="img/ultra-male.png" alt="Ultra Male Jean Paul Gaultier" style="--pos:50% 55%">
+            </div>
+            <div class="seal"><b>52<em>%</em></b><span>OFF</span></div>
+          </div>
+          <div class="info">
+            <p class="brand">Jean Paul Gaultier <span class="vol"><span class="sep"></span>125 ml</span></p>
+            <h3 class="name">Ultra Male</h3>
+            <p class="cond"><span>65% do conteúdo</span></p>
+            <p class="de"><i>de</i> <s>R$&nbsp;631,00</s></p>
+            <p class="por"><i>por</i><span class="lead"></span><span class="price"><span class="cur">R$</span>299,00</span></p>
+            <p class="save"><span>Economize</span> R$&nbsp;332,00</p>
           </div>
         </article>
 
@@ -1334,7 +1454,7 @@
   </div>
 </div>
 <!-- perfil olfativo de cada perfume (acordes + pirâmide), tirado do Fragrantica com o perfil.ps1; o item liga pelo data-perfil -->
-<script type="application/json" id="perfis">{"ysl-libre":{"fonte":"https://www.fragrantica.com.br/perfume/Yves-Saint-Laurent/Libre-56077.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"cítrico","forca":81,"cor":"#F9FF52"},{"nome":"lavanda","forca":75,"cor":"#9B7DB8"},{"nome":"baunilha","forca":64,"cor":"#FFFEC0"},{"nome":"aromático","forca":57,"cor":"#37A089"},{"nome":"doce","forca":56,"cor":"#EE363B"},{"nome":"atalcado","forca":53,"cor":"#EEDDCC"},{"nome":"animálico","forca":52,"cor":"#8E4B13"},{"nome":"almíscarado","forca":50,"cor":"#E7D8EA"},{"nome":"amadeirado","forca":50,"cor":"#774414"}],"notas":{"topo":["Lavanda","Mandarina","Groselha Preta","Petitgrain"],"coracao":["Lavanda","Flor de Laranjeira","Jasmim"],"fundo":["Baunilha de Madagascar","Almíscar","Cedro","Âmbar Cinzento"]},"quando":[{"nome":"Inverno","forca":82,"cor":"#78D6F0","votos":"6,8 mil"},{"nome":"Primavera","forca":76,"cor":"#9FE584","votos":"6,3 mil"},{"nome":"Verão","forca":46,"cor":"#FC958A","votos":"3,8 mil"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"8,3 mil"},{"nome":"Dia","forca":90,"cor":"#F59E0B","votos":"7,5 mil"},{"nome":"Noite","forca":83,"cor":"#8BB8D4","votos":"6,9 mil"}]},"rabanne-million-gold-elixir":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Million-Gold-Elixir-102755.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"amadeirado","forca":85,"cor":"#774414"},{"nome":"atalcado","forca":79,"cor":"#EEDDCC"},{"nome":"cítrico","forca":66,"cor":"#F9FF52"},{"nome":"especiado quente","forca":52,"cor":"#CC3300"},{"nome":"balsâmico","forca":52,"cor":"#AD8359"},{"nome":"doce","forca":48,"cor":"#EE363B"}],"notas":{"topo":["Mandarina Amarela"],"coracao":["Sândalo"],"fundo":["Baunilha"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"506"},{"nome":"Primavera","forca":45,"cor":"#9FE584","votos":"226"},{"nome":"Verão","forca":14,"cor":"#FC958A","votos":"69"},{"nome":"Outono","forca":90,"cor":"#F9BE6E","votos":"457"},{"nome":"Dia","forca":53,"cor":"#F59E0B","votos":"267"},{"nome":"Noite","forca":88,"cor":"#8BB8D4","votos":"446"}]},"lancome-la-vie-est-belle-elixir":{"fonte":"https://www.fragrantica.com.br/perfume/Lancome/La-Vie-est-Belle-L-Elixir-95856.html","acordes":[{"nome":"frutado","forca":100,"cor":"#FC4B29"},{"nome":"doce","forca":79,"cor":"#EE363B"},{"nome":"ozônico","forca":79,"cor":"#C9FDFB"},{"nome":"rosa","forca":70,"cor":"#FE016B"},{"nome":"aquático","forca":66,"cor":"#63CCE2"},{"nome":"couro","forca":62,"cor":"#78483A"},{"nome":"álcool","forca":49,"cor":"#F8EA8C"},{"nome":"verde","forca":47,"cor":"#0E8C1D"},{"nome":"animálico","forca":46,"cor":"#8E4B13"},{"nome":"cítrico","forca":45,"cor":"#F9FF52"}],"notas":{"topo":["Framboesa","Licor","Bergamota da Calábria"],"coracao":["Folha de Violeta","Rosa"],"fundo":["Couro","Manteiga de Cacau","Cedro"]},"quando":[{"nome":"Inverno","forca":96,"cor":"#78D6F0","votos":"1,3 mil"},{"nome":"Primavera","forca":83,"cor":"#9FE584","votos":"1,1 mil"},{"nome":"Verão","forca":44,"cor":"#FC958A","votos":"589"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":91,"cor":"#F59E0B","votos":"1,2 mil"},{"nome":"Noite","forca":93,"cor":"#8BB8D4","votos":"1,3 mil"}]},"ch-ch-2015":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/CH-2015-31507.html","acordes":[{"nome":"cítrico","forca":100,"cor":"#F9FF52"},{"nome":"amadeirado","forca":68,"cor":"#774414"},{"nome":"floral branco","forca":59,"cor":"#EDF2FB"},{"nome":"couro","forca":56,"cor":"#78483A"},{"nome":"doce","forca":53,"cor":"#EE363B"},{"nome":"animálico","forca":49,"cor":"#8E4B13"},{"nome":"aromático","forca":49,"cor":"#37A089"},{"nome":"atalcado","forca":48,"cor":"#EEDDCC"},{"nome":"patchouli","forca":47,"cor":"#63652E"},{"nome":"fresco especiado","forca":47,"cor":"#83C928"}],"notas":{"topo":["Toranja","Bergamota","Limão"],"coracao":["Flor de Laranjeira","Rosa","Jasmim"],"fundo":["Couro","Patchouli","Pralinê","Almíscar","Sândalo","Cedro"]},"quando":[{"nome":"Inverno","forca":75,"cor":"#78D6F0","votos":"337"},{"nome":"Primavera","forca":78,"cor":"#9FE584","votos":"347"},{"nome":"Verão","forca":46,"cor":"#FC958A","votos":"207"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"447"},{"nome":"Dia","forca":99,"cor":"#F59E0B","votos":"441"},{"nome":"Noite","forca":83,"cor":"#8BB8D4","votos":"372"}]},"ch-good-girl-jasmine-absolute":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/Good-Girl-Jasmine-Absolute-120291.html","acordes":[{"nome":"doce","forca":100,"cor":"#EE363B"},{"nome":"floral branco","forca":70,"cor":"#EDF2FB"},{"nome":"amêndoa","forca":61,"cor":"#F1E3C5"},{"nome":"frutado","forca":61,"cor":"#FC4B29"},{"nome":"baunilha","forca":56,"cor":"#FFFEC0"},{"nome":"caramelo","forca":52,"cor":"#DDA356"},{"nome":"âmbar","forca":49,"cor":"#BC4D10"},{"nome":"amendoado","forca":48,"cor":"#B4955F"},{"nome":"floral","forca":47,"cor":"#FF5F8D"}],"notas":{"topo":["Groselha Preta","Mandarina"],"coracao":["Jasmim","Amêndoa Amarga"],"fundo":["Toffee","Fava Tonka"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"586"},{"nome":"Primavera","forca":55,"cor":"#9FE584","votos":"324"},{"nome":"Verão","forca":24,"cor":"#FC958A","votos":"141"},{"nome":"Outono","forca":98,"cor":"#F9BE6E","votos":"577"},{"nome":"Dia","forca":61,"cor":"#F59E0B","votos":"356"},{"nome":"Noite","forca":99,"cor":"#8BB8D4","votos":"582"}]},"rabanne-invictus-parfum":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Invictus-Parfum-90433.html","acordes":[{"nome":"almíscarado","forca":100,"cor":"#E7D8EA"},{"nome":"aromático","forca":98,"cor":"#37A089"},{"nome":"marinho","forca":89,"cor":"#0E529B"},{"nome":"saboneteado","forca":89,"cor":"#E3F6FC"},{"nome":"atalcado","forca":82,"cor":"#EEDDCC"},{"nome":"amadeirado","forca":79,"cor":"#774414"},{"nome":"lavanda","forca":75,"cor":"#9B7DB8"},{"nome":"aquático","forca":66,"cor":"#63CCE2"},{"nome":"ozônico","forca":54,"cor":"#C9FDFB"},{"nome":"salgado","forca":53,"cor":"#E9FFF9"}],"notas":{"topo":["Notas marinhas","Lavanda","Pimenta Rosa"],"coracao":["Sabão","Folha de Violeta","Murta"],"fundo":["Almíscar","Cashmeran","Sândalo"]},"quando":[{"nome":"Inverno","forca":38,"cor":"#78D6F0","votos":"821"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"2,1 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"2,1 mil"},{"nome":"Outono","forca":83,"cor":"#F9BE6E","votos":"1,8 mil"},{"nome":"Dia","forca":97,"cor":"#F59E0B","votos":"2,1 mil"},{"nome":"Noite","forca":78,"cor":"#8BB8D4","votos":"1,7 mil"}]},"givenchy-gentleman-2017":{"fonte":"https://www.fragrantica.com.br/perfume/Givenchy/Gentleman-2017-46040.html","acordes":[{"nome":"íris","forca":100,"cor":"#B7A7D7"},{"nome":"frutado","forca":96,"cor":"#FC4B29"},{"nome":"doce","forca":87,"cor":"#EE363B"},{"nome":"atalcado","forca":82,"cor":"#EEDDCC"},{"nome":"especiado quente","forca":80,"cor":"#CC3300"},{"nome":"aromático","forca":79,"cor":"#37A089"},{"nome":"lavanda","forca":78,"cor":"#9B7DB8"},{"nome":"couro","forca":69,"cor":"#78483A"},{"nome":"terroso","forca":68,"cor":"#544838"},{"nome":"violeta","forca":65,"cor":"#9C1DFF"}],"notas":{"topo":["Pera","Cardamomo","Abacaxi"],"coracao":["Íris","Lavanda","Gerânio"],"fundo":["Couro","Casca de Baunilha Negra","Patchouli"]},"quando":[{"nome":"Inverno","forca":56,"cor":"#78D6F0","votos":"812"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"1,4 mil"},{"nome":"Verão","forca":60,"cor":"#FC958A","votos":"862"},{"nome":"Outono","forca":96,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":96,"cor":"#F59E0B","votos":"1,4 mil"},{"nome":"Noite","forca":72,"cor":"#8BB8D4","votos":"1 mil"}]},"hugo-jeans":{"fonte":"https://www.fragrantica.com.br/perfume/Hugo-Boss/Hugo-Jeans-Man-78426.html","acordes":[{"nome":"aromático","forca":100,"cor":"#37A089"},{"nome":"amadeirado","forca":82,"cor":"#774414"},{"nome":"fresco especiado","forca":79,"cor":"#83C928"},{"nome":"cítrico","forca":77,"cor":"#F9FF52"},{"nome":"verde","forca":63,"cor":"#0E8C1D"}],"notas":{"topo":["Toranja","Lima"],"coracao":["Bagas de Zimbro","Hortelã"],"fundo":["Cedro","Vetiver"]},"quando":[{"nome":"Inverno","forca":20,"cor":"#78D6F0","votos":"41"},{"nome":"Primavera","forca":98,"cor":"#9FE584","votos":"204"},{"nome":"Verão","forca":93,"cor":"#FC958A","votos":"193"},{"nome":"Outono","forca":49,"cor":"#F9BE6E","votos":"102"},{"nome":"Dia","forca":100,"cor":"#F59E0B","votos":"208"},{"nome":"Noite","forca":23,"cor":"#8BB8D4","votos":"48"}]},"boss-bottled-night":{"fonte":"https://www.fragrantica.com.br/perfume/Hugo-Boss/Boss-Bottled-Night-8825.html","acordes":[{"nome":"amadeirado","forca":100,"cor":"#774414"},{"nome":"violeta","forca":95,"cor":"#9C1DFF"},{"nome":"atalcado","forca":94,"cor":"#EEDDCC"},{"nome":"lavanda","forca":82,"cor":"#9B7DB8"},{"nome":"couro","forca":75,"cor":"#78483A"},{"nome":"almíscarado","forca":67,"cor":"#E7D8EA"},{"nome":"defumado","forca":66,"cor":"#827487"},{"nome":"floral","forca":55,"cor":"#FF5F8D"},{"nome":"aromático","forca":51,"cor":"#37A089"},{"nome":"fresco especiado","forca":46,"cor":"#83C928"}],"notas":{"topo":["Lavanda","Bétula"],"coracao":["Violeta"],"fundo":["Notas Amadeiradas","Almíscar"]},"quando":[{"nome":"Inverno","forca":66,"cor":"#78D6F0","votos":"1,6 mil"},{"nome":"Primavera","forca":75,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":42,"cor":"#FC958A","votos":"1 mil"},{"nome":"Outono","forca":81,"cor":"#F9BE6E","votos":"2 mil"},{"nome":"Dia","forca":47,"cor":"#F59E0B","votos":"1,2 mil"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"2,4 mil"}]},"jpg-ultra-male":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Ultra-Male-30947.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"frutado","forca":80,"cor":"#FC4B29"},{"nome":"aromático","forca":80,"cor":"#37A089"},{"nome":"doce","forca":79,"cor":"#EE363B"},{"nome":"canela","forca":70,"cor":"#D2691E"},{"nome":"especiado quente","forca":69,"cor":"#CC3300"},{"nome":"fresco especiado","forca":64,"cor":"#83C928"},{"nome":"lavanda","forca":63,"cor":"#9B7DB8"},{"nome":"atalcado","forca":59,"cor":"#EEDDCC"},{"nome":"verde","forca":59,"cor":"#0E8C1D"}],"notas":{"topo":["Pera","Lavanda","Hortelã","Bergamota","Limão"],"coracao":["Canela","Sálvia Esclaréia","Alcarávia"],"fundo":["Casca de Baunilha Negra","Âmbar","Patchouli","Cedro"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"11,1 mil"},{"nome":"Primavera","forca":53,"cor":"#9FE584","votos":"5,9 mil"},{"nome":"Verão","forca":26,"cor":"#FC958A","votos":"2,8 mil"},{"nome":"Outono","forca":88,"cor":"#F9BE6E","votos":"9,7 mil"},{"nome":"Dia","forca":38,"cor":"#F59E0B","votos":"4,2 mil"},{"nome":"Noite","forca":99,"cor":"#8BB8D4","votos":"11 mil"}]},"jpg-classique":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Classique-427.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"doce","forca":98,"cor":"#EE363B"},{"nome":"atalcado","forca":97,"cor":"#EEDDCC"},{"nome":"cítrico","forca":87,"cor":"#F9FF52"},{"nome":"baunilha","forca":75,"cor":"#FFFEC0"},{"nome":"floral","forca":72,"cor":"#FF5F8D"},{"nome":"picante suave","forca":72,"cor":"#E27752"},{"nome":"anis","forca":66,"cor":"#C3D7B3"},{"nome":"amadeirado","forca":62,"cor":"#774414"},{"nome":"floral amarelo","forca":62,"cor":"#FFDC10"}],"notas":{"topo":["Flor de Laranjeira","Anis Estrelado","Rosa","Mandarina","Pera","Bergamota"],"coracao":["Ylang Ylang","Gengibre","Orquídea","Tuberosa","Íris","Ameixa"],"fundo":["Baunilha","Âmbar","Almíscar","Canela","Sândalo"]},"quando":[{"nome":"Inverno","forca":92,"cor":"#78D6F0","votos":"3,4 mil"},{"nome":"Primavera","forca":49,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":30,"cor":"#FC958A","votos":"1,1 mil"},{"nome":"Outono","forca":87,"cor":"#F9BE6E","votos":"3,2 mil"},{"nome":"Dia","forca":68,"cor":"#F59E0B","votos":"2,5 mil"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"3,6 mil"}]},"rabanne-lady-million-fabulous":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Fabulous-66336.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"floral branco","forca":81,"cor":"#EDF2FB"},{"nome":"doce","forca":70,"cor":"#EE363B"},{"nome":"tuberosa","forca":62,"cor":"#EBFAF3"},{"nome":"floral amarelo","forca":51,"cor":"#FFDC10"},{"nome":"cítrico","forca":48,"cor":"#F9FF52"},{"nome":"âmbar","forca":48,"cor":"#BC4D10"},{"nome":"aldeídico","forca":47,"cor":"#D8E9F6"},{"nome":"picante suave","forca":46,"cor":"#E27752"}],"notas":{"topo":["Mandarina","Pimenta Rosa"],"coracao":["Tuberosa","Notas Solares","Jasmim","Ylang Ylang"],"fundo":["Baunilha","Fava Tonka","Musgo"]},"quando":[{"nome":"Inverno","forca":92,"cor":"#78D6F0","votos":"335"},{"nome":"Primavera","forca":48,"cor":"#9FE584","votos":"175"},{"nome":"Verão","forca":33,"cor":"#FC958A","votos":"120"},{"nome":"Outono","forca":95,"cor":"#F9BE6E","votos":"346"},{"nome":"Dia","forca":60,"cor":"#F59E0B","votos":"220"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"365"}]},"rabanne-lady-million-royal":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Royal-79160.html","acordes":[{"nome":"amadeirado","forca":100,"cor":"#774414"},{"nome":"floral branco","forca":88,"cor":"#EDF2FB"},{"nome":"frutado","forca":53,"cor":"#FC4B29"},{"nome":"fresco especiado","forca":49,"cor":"#83C928"},{"nome":"azedo","forca":44,"cor":"#C0E741"}],"notas":{"topo":["Romã"],"coracao":["Flores Brancas"],"fundo":["Notas Amadeiradas"]},"quando":[{"nome":"Inverno","forca":88,"cor":"#78D6F0","votos":"184"},{"nome":"Primavera","forca":74,"cor":"#9FE584","votos":"154"},{"nome":"Verão","forca":36,"cor":"#FC958A","votos":"76"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"209"},{"nome":"Dia","forca":80,"cor":"#F59E0B","votos":"167"},{"nome":"Noite","forca":85,"cor":"#8BB8D4","votos":"177"}]},"jpg-gaultier-divine":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Gaultier-Divine-83889.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"doce","forca":87,"cor":"#EE363B"},{"nome":"aquático","forca":76,"cor":"#63CCE2"},{"nome":"marinho","forca":72,"cor":"#0E529B"},{"nome":"aromático","forca":59,"cor":"#37A089"},{"nome":"atalcado","forca":59,"cor":"#EEDDCC"},{"nome":"floral amarelo","forca":52,"cor":"#FFDC10"},{"nome":"salgado","forca":47,"cor":"#E9FFF9"},{"nome":"almíscarado","forca":46,"cor":"#E7D8EA"},{"nome":"amadeirado","forca":45,"cor":"#774414"}],"notas":{"topo":["Calypsone®","Bergamota","Bagas Vermelhas"],"coracao":["Lírio","Ylang Ylang","Jasmim"],"fundo":["Merengue","Almíscar","Patchouli"]},"quando":[{"nome":"Inverno","forca":39,"cor":"#78D6F0","votos":"815"},{"nome":"Primavera","forca":88,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"2,1 mil"},{"nome":"Outono","forca":58,"cor":"#F9BE6E","votos":"1,2 mil"},{"nome":"Dia","forca":99,"cor":"#F59E0B","votos":"2,1 mil"},{"nome":"Noite","forca":58,"cor":"#8BB8D4","votos":"1,2 mil"}]},"dg-light-blue":{"fonte":"https://www.fragrantica.com.br/perfume/Dolce-Gabbana/Light-Blue-485.html","acordes":[{"nome":"cítrico","forca":100,"cor":"#F9FF52"},{"nome":"amadeirado","forca":74,"cor":"#774414"},{"nome":"fresco","forca":63,"cor":"#9BE5ED"},{"nome":"frutado","forca":59,"cor":"#FC4B29"},{"nome":"aromático","forca":54,"cor":"#37A089"},{"nome":"almíscarado","forca":50,"cor":"#E7D8EA"},{"nome":"atalcado","forca":47,"cor":"#EEDDCC"},{"nome":"verde","forca":44,"cor":"#0E8C1D"}],"notas":{"topo":["Limão Siciliano","Maçã","Cedro","Câmpanula"],"coracao":["Bambu","Jasmim","Rosa Branca"],"fundo":["Cedro","Almíscar","Âmbar"]},"quando":[{"nome":"Inverno","forca":11,"cor":"#78D6F0","votos":"1,8 mil"},{"nome":"Primavera","forca":55,"cor":"#9FE584","votos":"9,3 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"17,1 mil"},{"nome":"Outono","forca":12,"cor":"#F9BE6E","votos":"2,1 mil"},{"nome":"Dia","forca":94,"cor":"#F59E0B","votos":"16,1 mil"},{"nome":"Noite","forca":12,"cor":"#8BB8D4","votos":"2 mil"}]},"ch-212-vip-rose":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/212-VIP-Rose-22857.html","acordes":[{"nome":"floral","forca":100,"cor":"#FF5F8D"},{"nome":"almíscarado","forca":79,"cor":"#E7D8EA"},{"nome":"frutado","forca":67,"cor":"#FC4B29"},{"nome":"amadeirado","forca":66,"cor":"#774414"},{"nome":"atalcado","forca":53,"cor":"#EEDDCC"},{"nome":"rosa","forca":51,"cor":"#FE016B"}],"notas":{"topo":["Champanhe Rosé","Pimenta Rosa"],"coracao":["Flor de Pêssego","Rosa"],"fundo":["Almíscar Branco","Notas Amadeiradas"]},"quando":[{"nome":"Inverno","forca":47,"cor":"#78D6F0","votos":"934"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"2 mil"},{"nome":"Verão","forca":61,"cor":"#FC958A","votos":"1,2 mil"},{"nome":"Outono","forca":72,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":100,"cor":"#F59E0B","votos":"2 mil"},{"nome":"Noite","forca":81,"cor":"#8BB8D4","votos":"1,6 mil"}]},"rabanne-lady-million-empire":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Empire-55787.html","acordes":[{"nome":"frutado","forca":100,"cor":"#FC4B29"},{"nome":"doce","forca":76,"cor":"#EE363B"},{"nome":"amadeirado","forca":73,"cor":"#774414"},{"nome":"floral","forca":64,"cor":"#FF5F8D"},{"nome":"cítrico","forca":63,"cor":"#F9FF52"},{"nome":"fresco","forca":58,"cor":"#9BE5ED"},{"nome":"especiado quente","forca":58,"cor":"#CC3300"},{"nome":"picante suave","forca":53,"cor":"#E27752"},{"nome":"patchouli","forca":50,"cor":"#63652E"},{"nome":"floral branco","forca":49,"cor":"#EDF2FB"}],"notas":{"topo":["Groselha Vermelha","Laranja","Essência de Néroli"],"coracao":["Ameixa Mirabelle","Magnólia","Osmanthus","Flor de Laranjeira"],"fundo":["Conhaque","Patchouli","Almíscar Branco"]},"quando":[{"nome":"Inverno","forca":73,"cor":"#78D6F0","votos":"259"},{"nome":"Primavera","forca":63,"cor":"#9FE584","votos":"223"},{"nome":"Verão","forca":33,"cor":"#FC958A","votos":"116"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"354"},{"nome":"Dia","forca":86,"cor":"#F59E0B","votos":"304"},{"nome":"Noite","forca":81,"cor":"#8BB8D4","votos":"285"}]}}</script>
+<script type="application/json" id="perfis">{"ysl-libre":{"fonte":"https://www.fragrantica.com.br/perfume/Yves-Saint-Laurent/Libre-56077.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"cítrico","forca":81,"cor":"#F9FF52"},{"nome":"lavanda","forca":75,"cor":"#9B7DB8"},{"nome":"baunilha","forca":64,"cor":"#FFFEC0"},{"nome":"aromático","forca":57,"cor":"#37A089"},{"nome":"doce","forca":56,"cor":"#EE363B"},{"nome":"atalcado","forca":53,"cor":"#EEDDCC"},{"nome":"animálico","forca":52,"cor":"#8E4B13"},{"nome":"almíscarado","forca":50,"cor":"#E7D8EA"},{"nome":"amadeirado","forca":50,"cor":"#774414"}],"notas":{"topo":["Lavanda","Mandarina","Groselha Preta","Petitgrain"],"coracao":["Lavanda","Flor de Laranjeira","Jasmim"],"fundo":["Baunilha de Madagascar","Almíscar","Cedro","Âmbar Cinzento"]},"quando":[{"nome":"Inverno","forca":82,"cor":"#78D6F0","votos":"6,8 mil"},{"nome":"Primavera","forca":76,"cor":"#9FE584","votos":"6,3 mil"},{"nome":"Verão","forca":46,"cor":"#FC958A","votos":"3,8 mil"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"8,3 mil"},{"nome":"Dia","forca":90,"cor":"#F59E0B","votos":"7,5 mil"},{"nome":"Noite","forca":83,"cor":"#8BB8D4","votos":"6,9 mil"}]},"rabanne-million-gold-elixir":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Million-Gold-Elixir-102755.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"amadeirado","forca":85,"cor":"#774414"},{"nome":"atalcado","forca":79,"cor":"#EEDDCC"},{"nome":"cítrico","forca":66,"cor":"#F9FF52"},{"nome":"especiado quente","forca":52,"cor":"#CC3300"},{"nome":"balsâmico","forca":52,"cor":"#AD8359"},{"nome":"doce","forca":48,"cor":"#EE363B"}],"notas":{"topo":["Mandarina Amarela"],"coracao":["Sândalo"],"fundo":["Baunilha"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"506"},{"nome":"Primavera","forca":45,"cor":"#9FE584","votos":"226"},{"nome":"Verão","forca":14,"cor":"#FC958A","votos":"69"},{"nome":"Outono","forca":90,"cor":"#F9BE6E","votos":"457"},{"nome":"Dia","forca":53,"cor":"#F59E0B","votos":"267"},{"nome":"Noite","forca":88,"cor":"#8BB8D4","votos":"446"}]},"lancome-la-vie-est-belle-elixir":{"fonte":"https://www.fragrantica.com.br/perfume/Lancome/La-Vie-est-Belle-L-Elixir-95856.html","acordes":[{"nome":"frutado","forca":100,"cor":"#FC4B29"},{"nome":"doce","forca":79,"cor":"#EE363B"},{"nome":"ozônico","forca":79,"cor":"#C9FDFB"},{"nome":"rosa","forca":70,"cor":"#FE016B"},{"nome":"aquático","forca":66,"cor":"#63CCE2"},{"nome":"couro","forca":62,"cor":"#78483A"},{"nome":"álcool","forca":49,"cor":"#F8EA8C"},{"nome":"verde","forca":47,"cor":"#0E8C1D"},{"nome":"animálico","forca":46,"cor":"#8E4B13"},{"nome":"cítrico","forca":45,"cor":"#F9FF52"}],"notas":{"topo":["Framboesa","Licor","Bergamota da Calábria"],"coracao":["Folha de Violeta","Rosa"],"fundo":["Couro","Manteiga de Cacau","Cedro"]},"quando":[{"nome":"Inverno","forca":96,"cor":"#78D6F0","votos":"1,3 mil"},{"nome":"Primavera","forca":83,"cor":"#9FE584","votos":"1,1 mil"},{"nome":"Verão","forca":44,"cor":"#FC958A","votos":"589"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":91,"cor":"#F59E0B","votos":"1,2 mil"},{"nome":"Noite","forca":93,"cor":"#8BB8D4","votos":"1,3 mil"}]},"ch-ch-2015":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/CH-2015-31507.html","acordes":[{"nome":"cítrico","forca":100,"cor":"#F9FF52"},{"nome":"amadeirado","forca":68,"cor":"#774414"},{"nome":"floral branco","forca":59,"cor":"#EDF2FB"},{"nome":"couro","forca":56,"cor":"#78483A"},{"nome":"doce","forca":53,"cor":"#EE363B"},{"nome":"animálico","forca":49,"cor":"#8E4B13"},{"nome":"aromático","forca":49,"cor":"#37A089"},{"nome":"atalcado","forca":48,"cor":"#EEDDCC"},{"nome":"patchouli","forca":47,"cor":"#63652E"},{"nome":"fresco especiado","forca":47,"cor":"#83C928"}],"notas":{"topo":["Toranja","Bergamota","Limão"],"coracao":["Flor de Laranjeira","Rosa","Jasmim"],"fundo":["Couro","Patchouli","Pralinê","Almíscar","Sândalo","Cedro"]},"quando":[{"nome":"Inverno","forca":75,"cor":"#78D6F0","votos":"337"},{"nome":"Primavera","forca":78,"cor":"#9FE584","votos":"347"},{"nome":"Verão","forca":46,"cor":"#FC958A","votos":"207"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"447"},{"nome":"Dia","forca":99,"cor":"#F59E0B","votos":"441"},{"nome":"Noite","forca":83,"cor":"#8BB8D4","votos":"372"}]},"ch-good-girl-jasmine-absolute":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/Good-Girl-Jasmine-Absolute-120291.html","acordes":[{"nome":"doce","forca":100,"cor":"#EE363B"},{"nome":"floral branco","forca":70,"cor":"#EDF2FB"},{"nome":"amêndoa","forca":61,"cor":"#F1E3C5"},{"nome":"frutado","forca":61,"cor":"#FC4B29"},{"nome":"baunilha","forca":56,"cor":"#FFFEC0"},{"nome":"caramelo","forca":52,"cor":"#DDA356"},{"nome":"âmbar","forca":49,"cor":"#BC4D10"},{"nome":"amendoado","forca":48,"cor":"#B4955F"},{"nome":"floral","forca":47,"cor":"#FF5F8D"}],"notas":{"topo":["Groselha Preta","Mandarina"],"coracao":["Jasmim","Amêndoa Amarga"],"fundo":["Toffee","Fava Tonka"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"586"},{"nome":"Primavera","forca":55,"cor":"#9FE584","votos":"324"},{"nome":"Verão","forca":24,"cor":"#FC958A","votos":"141"},{"nome":"Outono","forca":98,"cor":"#F9BE6E","votos":"577"},{"nome":"Dia","forca":61,"cor":"#F59E0B","votos":"356"},{"nome":"Noite","forca":99,"cor":"#8BB8D4","votos":"582"}]},"rabanne-invictus-parfum":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Invictus-Parfum-90433.html","acordes":[{"nome":"almíscarado","forca":100,"cor":"#E7D8EA"},{"nome":"aromático","forca":98,"cor":"#37A089"},{"nome":"marinho","forca":89,"cor":"#0E529B"},{"nome":"saboneteado","forca":89,"cor":"#E3F6FC"},{"nome":"atalcado","forca":82,"cor":"#EEDDCC"},{"nome":"amadeirado","forca":79,"cor":"#774414"},{"nome":"lavanda","forca":75,"cor":"#9B7DB8"},{"nome":"aquático","forca":66,"cor":"#63CCE2"},{"nome":"ozônico","forca":54,"cor":"#C9FDFB"},{"nome":"salgado","forca":53,"cor":"#E9FFF9"}],"notas":{"topo":["Notas marinhas","Lavanda","Pimenta Rosa"],"coracao":["Sabão","Folha de Violeta","Murta"],"fundo":["Almíscar","Cashmeran","Sândalo"]},"quando":[{"nome":"Inverno","forca":38,"cor":"#78D6F0","votos":"821"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"2,1 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"2,1 mil"},{"nome":"Outono","forca":83,"cor":"#F9BE6E","votos":"1,8 mil"},{"nome":"Dia","forca":97,"cor":"#F59E0B","votos":"2,1 mil"},{"nome":"Noite","forca":78,"cor":"#8BB8D4","votos":"1,7 mil"}]},"givenchy-gentleman-2017":{"fonte":"https://www.fragrantica.com.br/perfume/Givenchy/Gentleman-2017-46040.html","acordes":[{"nome":"íris","forca":100,"cor":"#B7A7D7"},{"nome":"frutado","forca":96,"cor":"#FC4B29"},{"nome":"doce","forca":87,"cor":"#EE363B"},{"nome":"atalcado","forca":82,"cor":"#EEDDCC"},{"nome":"especiado quente","forca":80,"cor":"#CC3300"},{"nome":"aromático","forca":79,"cor":"#37A089"},{"nome":"lavanda","forca":78,"cor":"#9B7DB8"},{"nome":"couro","forca":69,"cor":"#78483A"},{"nome":"terroso","forca":68,"cor":"#544838"},{"nome":"violeta","forca":65,"cor":"#9C1DFF"}],"notas":{"topo":["Pera","Cardamomo","Abacaxi"],"coracao":["Íris","Lavanda","Gerânio"],"fundo":["Couro","Casca de Baunilha Negra","Patchouli"]},"quando":[{"nome":"Inverno","forca":56,"cor":"#78D6F0","votos":"812"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"1,4 mil"},{"nome":"Verão","forca":60,"cor":"#FC958A","votos":"862"},{"nome":"Outono","forca":96,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":96,"cor":"#F59E0B","votos":"1,4 mil"},{"nome":"Noite","forca":72,"cor":"#8BB8D4","votos":"1 mil"}]},"hugo-jeans":{"fonte":"https://www.fragrantica.com.br/perfume/Hugo-Boss/Hugo-Jeans-Man-78426.html","acordes":[{"nome":"aromático","forca":100,"cor":"#37A089"},{"nome":"amadeirado","forca":82,"cor":"#774414"},{"nome":"fresco especiado","forca":79,"cor":"#83C928"},{"nome":"cítrico","forca":77,"cor":"#F9FF52"},{"nome":"verde","forca":63,"cor":"#0E8C1D"}],"notas":{"topo":["Toranja","Lima"],"coracao":["Bagas de Zimbro","Hortelã"],"fundo":["Cedro","Vetiver"]},"quando":[{"nome":"Inverno","forca":20,"cor":"#78D6F0","votos":"41"},{"nome":"Primavera","forca":98,"cor":"#9FE584","votos":"204"},{"nome":"Verão","forca":93,"cor":"#FC958A","votos":"193"},{"nome":"Outono","forca":49,"cor":"#F9BE6E","votos":"102"},{"nome":"Dia","forca":100,"cor":"#F59E0B","votos":"208"},{"nome":"Noite","forca":23,"cor":"#8BB8D4","votos":"48"}]},"boss-bottled-night":{"fonte":"https://www.fragrantica.com.br/perfume/Hugo-Boss/Boss-Bottled-Night-8825.html","acordes":[{"nome":"amadeirado","forca":100,"cor":"#774414"},{"nome":"violeta","forca":95,"cor":"#9C1DFF"},{"nome":"atalcado","forca":94,"cor":"#EEDDCC"},{"nome":"lavanda","forca":82,"cor":"#9B7DB8"},{"nome":"couro","forca":75,"cor":"#78483A"},{"nome":"almíscarado","forca":67,"cor":"#E7D8EA"},{"nome":"defumado","forca":66,"cor":"#827487"},{"nome":"floral","forca":55,"cor":"#FF5F8D"},{"nome":"aromático","forca":51,"cor":"#37A089"},{"nome":"fresco especiado","forca":46,"cor":"#83C928"}],"notas":{"topo":["Lavanda","Bétula"],"coracao":["Violeta"],"fundo":["Notas Amadeiradas","Almíscar"]},"quando":[{"nome":"Inverno","forca":66,"cor":"#78D6F0","votos":"1,6 mil"},{"nome":"Primavera","forca":75,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":42,"cor":"#FC958A","votos":"1 mil"},{"nome":"Outono","forca":81,"cor":"#F9BE6E","votos":"2 mil"},{"nome":"Dia","forca":47,"cor":"#F59E0B","votos":"1,2 mil"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"2,4 mil"}]},"jpg-ultra-male":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Ultra-Male-30947.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"frutado","forca":80,"cor":"#FC4B29"},{"nome":"aromático","forca":80,"cor":"#37A089"},{"nome":"doce","forca":79,"cor":"#EE363B"},{"nome":"canela","forca":70,"cor":"#D2691E"},{"nome":"especiado quente","forca":69,"cor":"#CC3300"},{"nome":"fresco especiado","forca":64,"cor":"#83C928"},{"nome":"lavanda","forca":63,"cor":"#9B7DB8"},{"nome":"atalcado","forca":59,"cor":"#EEDDCC"},{"nome":"verde","forca":59,"cor":"#0E8C1D"}],"notas":{"topo":["Pera","Lavanda","Hortelã","Bergamota","Limão"],"coracao":["Canela","Sálvia Esclaréia","Alcarávia"],"fundo":["Casca de Baunilha Negra","Âmbar","Patchouli","Cedro"]},"quando":[{"nome":"Inverno","forca":100,"cor":"#78D6F0","votos":"11,1 mil"},{"nome":"Primavera","forca":53,"cor":"#9FE584","votos":"5,9 mil"},{"nome":"Verão","forca":26,"cor":"#FC958A","votos":"2,8 mil"},{"nome":"Outono","forca":88,"cor":"#F9BE6E","votos":"9,7 mil"},{"nome":"Dia","forca":38,"cor":"#F59E0B","votos":"4,2 mil"},{"nome":"Noite","forca":99,"cor":"#8BB8D4","votos":"11 mil"}]},"jpg-classique":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Classique-427.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"doce","forca":98,"cor":"#EE363B"},{"nome":"atalcado","forca":97,"cor":"#EEDDCC"},{"nome":"cítrico","forca":87,"cor":"#F9FF52"},{"nome":"baunilha","forca":75,"cor":"#FFFEC0"},{"nome":"floral","forca":72,"cor":"#FF5F8D"},{"nome":"picante suave","forca":72,"cor":"#E27752"},{"nome":"anis","forca":66,"cor":"#C3D7B3"},{"nome":"amadeirado","forca":62,"cor":"#774414"},{"nome":"floral amarelo","forca":62,"cor":"#FFDC10"}],"notas":{"topo":["Flor de Laranjeira","Anis Estrelado","Rosa","Mandarina","Pera","Bergamota"],"coracao":["Ylang Ylang","Gengibre","Orquídea","Tuberosa","Íris","Ameixa"],"fundo":["Baunilha","Âmbar","Almíscar","Canela","Sândalo"]},"quando":[{"nome":"Inverno","forca":92,"cor":"#78D6F0","votos":"3,4 mil"},{"nome":"Primavera","forca":49,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":30,"cor":"#FC958A","votos":"1,1 mil"},{"nome":"Outono","forca":87,"cor":"#F9BE6E","votos":"3,2 mil"},{"nome":"Dia","forca":68,"cor":"#F59E0B","votos":"2,5 mil"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"3,6 mil"}]},"rabanne-lady-million-fabulous":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Fabulous-66336.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"floral branco","forca":81,"cor":"#EDF2FB"},{"nome":"doce","forca":70,"cor":"#EE363B"},{"nome":"tuberosa","forca":62,"cor":"#EBFAF3"},{"nome":"floral amarelo","forca":51,"cor":"#FFDC10"},{"nome":"cítrico","forca":48,"cor":"#F9FF52"},{"nome":"âmbar","forca":48,"cor":"#BC4D10"},{"nome":"aldeídico","forca":47,"cor":"#D8E9F6"},{"nome":"picante suave","forca":46,"cor":"#E27752"}],"notas":{"topo":["Mandarina","Pimenta Rosa"],"coracao":["Tuberosa","Notas Solares","Jasmim","Ylang Ylang"],"fundo":["Baunilha","Fava Tonka","Musgo"]},"quando":[{"nome":"Inverno","forca":92,"cor":"#78D6F0","votos":"335"},{"nome":"Primavera","forca":48,"cor":"#9FE584","votos":"175"},{"nome":"Verão","forca":33,"cor":"#FC958A","votos":"120"},{"nome":"Outono","forca":95,"cor":"#F9BE6E","votos":"346"},{"nome":"Dia","forca":60,"cor":"#F59E0B","votos":"220"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"365"}]},"rabanne-lady-million-royal":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Royal-79160.html","acordes":[{"nome":"amadeirado","forca":100,"cor":"#774414"},{"nome":"floral branco","forca":88,"cor":"#EDF2FB"},{"nome":"frutado","forca":53,"cor":"#FC4B29"},{"nome":"fresco especiado","forca":49,"cor":"#83C928"},{"nome":"azedo","forca":44,"cor":"#C0E741"}],"notas":{"topo":["Romã"],"coracao":["Flores Brancas"],"fundo":["Notas Amadeiradas"]},"quando":[{"nome":"Inverno","forca":88,"cor":"#78D6F0","votos":"184"},{"nome":"Primavera","forca":74,"cor":"#9FE584","votos":"154"},{"nome":"Verão","forca":36,"cor":"#FC958A","votos":"76"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"209"},{"nome":"Dia","forca":80,"cor":"#F59E0B","votos":"167"},{"nome":"Noite","forca":85,"cor":"#8BB8D4","votos":"177"}]},"jpg-gaultier-divine":{"fonte":"https://www.fragrantica.com.br/perfume/Jean-Paul-Gaultier/Gaultier-Divine-83889.html","acordes":[{"nome":"floral branco","forca":100,"cor":"#EDF2FB"},{"nome":"doce","forca":87,"cor":"#EE363B"},{"nome":"aquático","forca":76,"cor":"#63CCE2"},{"nome":"marinho","forca":72,"cor":"#0E529B"},{"nome":"aromático","forca":59,"cor":"#37A089"},{"nome":"atalcado","forca":59,"cor":"#EEDDCC"},{"nome":"floral amarelo","forca":52,"cor":"#FFDC10"},{"nome":"salgado","forca":47,"cor":"#E9FFF9"},{"nome":"almíscarado","forca":46,"cor":"#E7D8EA"},{"nome":"amadeirado","forca":45,"cor":"#774414"}],"notas":{"topo":["Calypsone®","Bergamota","Bagas Vermelhas"],"coracao":["Lírio","Ylang Ylang","Jasmim"],"fundo":["Merengue","Almíscar","Patchouli"]},"quando":[{"nome":"Inverno","forca":39,"cor":"#78D6F0","votos":"815"},{"nome":"Primavera","forca":88,"cor":"#9FE584","votos":"1,8 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"2,1 mil"},{"nome":"Outono","forca":58,"cor":"#F9BE6E","votos":"1,2 mil"},{"nome":"Dia","forca":99,"cor":"#F59E0B","votos":"2,1 mil"},{"nome":"Noite","forca":58,"cor":"#8BB8D4","votos":"1,2 mil"}]},"dg-light-blue":{"fonte":"https://www.fragrantica.com.br/perfume/Dolce-Gabbana/Light-Blue-485.html","acordes":[{"nome":"cítrico","forca":100,"cor":"#F9FF52"},{"nome":"amadeirado","forca":74,"cor":"#774414"},{"nome":"fresco","forca":63,"cor":"#9BE5ED"},{"nome":"frutado","forca":59,"cor":"#FC4B29"},{"nome":"aromático","forca":54,"cor":"#37A089"},{"nome":"almíscarado","forca":50,"cor":"#E7D8EA"},{"nome":"atalcado","forca":47,"cor":"#EEDDCC"},{"nome":"verde","forca":44,"cor":"#0E8C1D"}],"notas":{"topo":["Limão Siciliano","Maçã","Cedro","Câmpanula"],"coracao":["Bambu","Jasmim","Rosa Branca"],"fundo":["Cedro","Almíscar","Âmbar"]},"quando":[{"nome":"Inverno","forca":11,"cor":"#78D6F0","votos":"1,8 mil"},{"nome":"Primavera","forca":55,"cor":"#9FE584","votos":"9,3 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"17,1 mil"},{"nome":"Outono","forca":12,"cor":"#F9BE6E","votos":"2,1 mil"},{"nome":"Dia","forca":94,"cor":"#F59E0B","votos":"16,1 mil"},{"nome":"Noite","forca":12,"cor":"#8BB8D4","votos":"2 mil"}]},"ch-212-vip-rose":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/212-VIP-Rose-22857.html","acordes":[{"nome":"floral","forca":100,"cor":"#FF5F8D"},{"nome":"almíscarado","forca":79,"cor":"#E7D8EA"},{"nome":"frutado","forca":67,"cor":"#FC4B29"},{"nome":"amadeirado","forca":66,"cor":"#774414"},{"nome":"atalcado","forca":53,"cor":"#EEDDCC"},{"nome":"rosa","forca":51,"cor":"#FE016B"}],"notas":{"topo":["Champanhe Rosé","Pimenta Rosa"],"coracao":["Flor de Pêssego","Rosa"],"fundo":["Almíscar Branco","Notas Amadeiradas"]},"quando":[{"nome":"Inverno","forca":47,"cor":"#78D6F0","votos":"934"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"2 mil"},{"nome":"Verão","forca":61,"cor":"#FC958A","votos":"1,2 mil"},{"nome":"Outono","forca":72,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":100,"cor":"#F59E0B","votos":"2 mil"},{"nome":"Noite","forca":81,"cor":"#8BB8D4","votos":"1,6 mil"}]},"rabanne-lady-million-empire":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Lady-Million-Empire-55787.html","acordes":[{"nome":"frutado","forca":100,"cor":"#FC4B29"},{"nome":"doce","forca":76,"cor":"#EE363B"},{"nome":"amadeirado","forca":73,"cor":"#774414"},{"nome":"floral","forca":64,"cor":"#FF5F8D"},{"nome":"cítrico","forca":63,"cor":"#F9FF52"},{"nome":"fresco","forca":58,"cor":"#9BE5ED"},{"nome":"especiado quente","forca":58,"cor":"#CC3300"},{"nome":"picante suave","forca":53,"cor":"#E27752"},{"nome":"patchouli","forca":50,"cor":"#63652E"},{"nome":"floral branco","forca":49,"cor":"#EDF2FB"}],"notas":{"topo":["Groselha Vermelha","Laranja","Essência de Néroli"],"coracao":["Ameixa Mirabelle","Magnólia","Osmanthus","Flor de Laranjeira"],"fundo":["Conhaque","Patchouli","Almíscar Branco"]},"quando":[{"nome":"Inverno","forca":73,"cor":"#78D6F0","votos":"259"},{"nome":"Primavera","forca":63,"cor":"#9FE584","votos":"223"},{"nome":"Verão","forca":33,"cor":"#FC958A","votos":"116"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"354"},{"nome":"Dia","forca":86,"cor":"#F59E0B","votos":"304"},{"nome":"Noite","forca":81,"cor":"#8BB8D4","votos":"285"}]},"armani-acqua-di-gio-profondo":{"fonte":"https://www.fragrantica.com.br/perfume/Giorgio-Armani/Acqua-di-Gio-Profondo-59532.html","acordes":[{"nome":"marinho","forca":100,"cor":"#0E529B"},{"nome":"aromático","forca":98,"cor":"#37A089"},{"nome":"cítrico","forca":81,"cor":"#F9FF52"},{"nome":"fresco especiado","forca":67,"cor":"#83C928"},{"nome":"fresco","forca":65,"cor":"#9BE5ED"},{"nome":"amadeirado","forca":61,"cor":"#774414"},{"nome":"mineral","forca":59,"cor":"#71BBBF"},{"nome":"salgado","forca":47,"cor":"#E9FFF9"},{"nome":"lavanda","forca":45,"cor":"#9B7DB8"}],"notas":{"topo":["Notas Oceânicas","Aquozone®","Bergamota","Mandarina Verde"],"coracao":["Alecrim","Lavanda","Cipreste","Lentisco"],"fundo":["Notas Minerais","Almíscar","Patchouli","Âmbar"]},"quando":[{"nome":"Inverno","forca":9,"cor":"#78D6F0","votos":"801"},{"nome":"Primavera","forca":79,"cor":"#9FE584","votos":"7 mil"},{"nome":"Verão","forca":100,"cor":"#FC958A","votos":"8,8 mil"},{"nome":"Outono","forca":24,"cor":"#F9BE6E","votos":"2,1 mil"},{"nome":"Dia","forca":86,"cor":"#F59E0B","votos":"7,6 mil"},{"nome":"Noite","forca":28,"cor":"#8BB8D4","votos":"2,5 mil"}]},"rabanne-phantom":{"fonte":"https://www.fragrantica.com.br/perfume/Rabanne/Phantom-68226.html","acordes":[{"nome":"cítrico","forca":100,"cor":"#F9FF52"},{"nome":"baunilha","forca":84,"cor":"#FFFEC0"},{"nome":"lavanda","forca":77,"cor":"#9B7DB8"},{"nome":"terroso","forca":69,"cor":"#544838"},{"nome":"aromático","forca":69,"cor":"#37A089"},{"nome":"amadeirado","forca":53,"cor":"#774414"},{"nome":"defumado","forca":52,"cor":"#827487"},{"nome":"frutado","forca":49,"cor":"#FC4B29"},{"nome":"fresco","forca":48,"cor":"#9BE5ED"},{"nome":"fresco especiado","forca":48,"cor":"#83C928"}],"notas":{"topo":["Lavanda","Raspas de Limão","Limão de Amalfi"],"coracao":["Lavanda","Notas Terrosas","Maçã","Fumaça","Patchouli"],"fundo":["Baunilha","Lavanda","Vetiver"]},"quando":[{"nome":"Inverno","forca":83,"cor":"#78D6F0","votos":"2,5 mil"},{"nome":"Primavera","forca":100,"cor":"#9FE584","votos":"3 mil"},{"nome":"Verão","forca":66,"cor":"#FC958A","votos":"2 mil"},{"nome":"Outono","forca":100,"cor":"#F9BE6E","votos":"3 mil"},{"nome":"Dia","forca":96,"cor":"#F59E0B","votos":"2,9 mil"},{"nome":"Noite","forca":90,"cor":"#8BB8D4","votos":"2,7 mil"}]},"ch-212-sexy-men":{"fonte":"https://www.fragrantica.com.br/perfume/Carolina-Herrera/212-Sexy-Men-1054.html","acordes":[{"nome":"baunilha","forca":100,"cor":"#FFFEC0"},{"nome":"amadeirado","forca":90,"cor":"#774414"},{"nome":"atalcado","forca":81,"cor":"#EEDDCC"},{"nome":"especiado quente","forca":79,"cor":"#CC3300"},{"nome":"fresco especiado","forca":71,"cor":"#83C928"},{"nome":"cítrico","forca":61,"cor":"#F9FF52"},{"nome":"floral","forca":58,"cor":"#FF5F8D"},{"nome":"aromático","forca":53,"cor":"#37A089"},{"nome":"almíscarado","forca":52,"cor":"#E7D8EA"},{"nome":"âmbar","forca":51,"cor":"#BC4D10"}],"notas":{"topo":["Mandarina","Bergamota","Notas Verdes"],"coracao":["Pimenta","Cardamomo","Flores"],"fundo":["Baunilha","Madeira Guaiac","Sândalo","Almíscar","Âmbar"]},"quando":[{"nome":"Inverno","forca":88,"cor":"#78D6F0","votos":"1,4 mil"},{"nome":"Primavera","forca":39,"cor":"#9FE584","votos":"645"},{"nome":"Verão","forca":18,"cor":"#FC958A","votos":"286"},{"nome":"Outono","forca":84,"cor":"#F9BE6E","votos":"1,4 mil"},{"nome":"Dia","forca":36,"cor":"#F59E0B","votos":"589"},{"nome":"Noite","forca":100,"cor":"#8BB8D4","votos":"1,6 mil"}]}}</script>
 <script>
   // abre direto na aba Testers quando o link termina em #testers, e mantém o endereço certo ao trocar de aba
   (function () {
@@ -1457,6 +1577,7 @@
         var esg = document.createElement('span'); esg.textContent = 'Esgotado'; cond.appendChild(esg);
       }
       if (cond) cap.appendChild(cond);
+      try { montarCompra(item); } catch (e) {}   // preço + botão "Comprar"; erro aqui nunca impede a foto de abrir
       var p = perfis[wrap.getAttribute('data-perfil') || ''];   // <div class="frame-wrap" data-perfil="...">
       var comPerfil = false;
       try { comPerfil = !!(p && montarPerfil(p)); } catch (e) { comPerfil = false; }   // dado estranho no perfil nunca impede a foto de abrir
@@ -1464,7 +1585,7 @@
       if (!comPerfil) info.textContent = '';
       lb.classList.toggle('tem-perfil', comPerfil);
       lb.setAttribute('aria-label', comPerfil ? 'Foto e características do perfume' : 'Foto ampliada');
-      origem = wrap;
+      origem = item;
       lb.hidden = false;
       lb.scrollTop = 0;
       if (comPerfil) info.scrollTop = 0;
@@ -1482,15 +1603,61 @@
       if (origem) origem.focus({ preventScroll: true });   // sem isso a página dava um pulo ao fechar
     }
 
-    document.querySelectorAll('.item .frame-wrap').forEach(function (wrap) {
-      var img = wrap.querySelector('.frame img');
+    // preço do item e botão "Comprar": abre o WhatsApp do Fernando com uma mensagem desse perfume
+    var WA = (function () {
+      var a = document.querySelector('.wa-link');
+      try { var u = new URL(a.href); return u.origin + u.pathname; } catch (e) { return 'https://wa.me/5551993467804'; }
+    })();
+    var WA_ICONE = (document.querySelector('.wa-link .wa-icon path') || {}).getAttribute ? document.querySelector('.wa-link .wa-icon path').getAttribute('d') : '';
+    function texto(el) { return el ? el.textContent.replace(/\s+/g, ' ').trim() : ''; }
+    function montarCompra(item) {
+      var nome = texto(item.querySelector('.name'));
+      var brandEl = item.querySelector('.brand');
+      var marca = brandEl ? texto(brandEl.firstChild) : '';
+      var vol = texto(item.querySelector('.brand .vol'));
+      var de = texto(item.querySelector('.de s'));
+      var cur = texto(item.querySelector('.price .cur')), precoEl = item.querySelector('.price');
+      var por = precoEl ? texto(precoEl).replace(cur, '').trim() : '';
+      var off = texto(item.querySelector('.seal b')).replace(/\s+/g, '');
+      var esgotado = item.classList.contains('esgotado');
+      var tester = !!item.closest('#painel-testers');
+      var condEl = item.querySelector('.cond span');
+      var condTxt = condEl ? texto(condEl).toLowerCase() : '';
+      if (!por) return;
+      var preco = el('p', 'lb-preco' + (esgotado ? ' esg' : ''));
+      if (de) { var d = el('span', 'lb-de', 'de '); d.appendChild(el('s', null, de)); preco.appendChild(d); }
+      var pr = el('span', 'lb-por'); pr.appendChild(el('small', null, 'R$')); pr.appendChild(document.createTextNode(por)); preco.appendChild(pr);
+      if (off) preco.appendChild(el('span', 'lb-off', off + ' OFF'));
+      cap.appendChild(preco);
+      if (esgotado) return;   // esgotado: mostra o preço, sem botão de comprar
+      var tipo = tester ? (condTxt === 'cheio' ? 'tester cheio' : (condTxt ? 'tester com ' + condTxt : 'tester')) : 'lacrado';
+      var detalhes = [marca, vol, tipo].filter(Boolean).join(', ');
+      var msg = 'Oii, quero comprar o ' + nome + (detalhes ? ' (' + detalhes + ')' : '') + ' por R$ ' + por + '. Ainda está disponível?';
+      var a = el('a', 'lb-comprar');
+      a.href = WA + '?text=' + encodeURIComponent(msg);
+      a.target = '_blank'; a.rel = 'noopener';
+      a.setAttribute('aria-label', 'Comprar ' + nome + ' pelo WhatsApp');
+      if (WA_ICONE) {
+        var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'), path = document.createElementNS(ns, 'path');
+        svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true');
+        path.setAttribute('fill', 'currentColor'); path.setAttribute('d', WA_ICONE);
+        svg.appendChild(path); a.appendChild(svg);
+      }
+      a.appendChild(document.createTextNode('Comprar'));
+      a.addEventListener('click', function (e) { e.stopPropagation(); });   // abre o WhatsApp sem fechar a foto
+      cap.appendChild(a);
+    }
+
+    // o card inteiro (foto + nome + preço) abre a foto ampliada, não só a foto
+    document.querySelectorAll('.item').forEach(function (item) {
+      var wrap = item.querySelector('.frame-wrap'), img = wrap && wrap.querySelector('.frame img');
       if (!img) return;
-      var nome = wrap.closest('.item').querySelector('.name');
-      wrap.setAttribute('role', 'button');
-      wrap.tabIndex = 0;
-      wrap.setAttribute('aria-label', 'Ver foto ampliada' + (nome ? ': ' + nome.textContent : ''));
-      wrap.addEventListener('click', function () { abrir(wrap); });
-      wrap.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(wrap); } });
+      var nome = item.querySelector('.name');
+      item.setAttribute('role', 'button');
+      item.tabIndex = 0;
+      item.setAttribute('aria-label', 'Ver detalhes e comprar' + (nome ? ': ' + nome.textContent : ''));
+      item.addEventListener('click', function () { abrir(wrap); });
+      item.addEventListener('keydown', function (e) { if (e.target === item && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); abrir(wrap); } });
     });
     lb.addEventListener('click', function () { fecharLb(false); });
     // tocar no painel (pra ler/rolar) nao fecha; o link da fonte continua funcionando
@@ -1499,8 +1666,8 @@
       if (lb.hidden) return;
       if (e.key === 'Escape') { e.preventDefault(); fecharLb(false); }
       else if (e.key === 'Tab') {
-        // foco preso no X e no link da fonte (quando tem painel)
-        var alvos = [fechar].concat(info.hidden ? [] : [].slice.call(info.querySelectorAll('a[href]')));
+        // foco preso dentro da foto ampliada: X, botão Comprar e link da fonte (quando tem painel)
+        var alvos = [fechar].concat([].slice.call(cap.querySelectorAll('a[href]')), info.hidden ? [] : [].slice.call(info.querySelectorAll('a[href]')));
         var k = alvos.indexOf(document.activeElement);
         e.preventDefault();
         alvos[(k + (e.shiftKey ? alvos.length - 1 : 1)) % alvos.length].focus();
