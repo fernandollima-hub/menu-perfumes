@@ -938,6 +938,65 @@
     .lead { min-width: 0; margin: 0 4px; }
     .cond span { letter-spacing: 0.04em; padding: 4px 6px 3px; }
   }
+
+  /* ---------- vitrine em grade (estilo loja): cards lado a lado em vez de um embaixo do outro ----------
+     Liga com class="grade" no <main>; pra voltar à lista é só tirar a classe. */
+  .page.grade { max-width: 1180px; }
+  .grade .painel section {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+    align-items: stretch;
+  }
+  .grade .painel section > .sec-t { grid-column: 1 / -1; margin: 22px 0 2px; }
+  .grade .item,
+  .grade .item + .item {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 12px 12px 14px;
+    border: 1px solid var(--gold-ghost);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255, 236, 214, 0.035), transparent 55%);
+    transition: border-color 0.2s ease;
+  }
+  @media (hover: hover) { .grade .item[role="button"]:hover { border-color: var(--gold-faint); } }
+  .grade .frame-wrap { width: 100%; box-sizing: border-box; }
+  .grade .frame { border-radius: 999px 999px 4px 4px; }   /* raio grande = topo em arco em qualquer largura */
+  .grade .info { flex: 1; margin-top: 10px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .grade .brand { font-size: 11px; letter-spacing: 0.14em; }
+  .grade .brand .vol { display: block; margin-top: 2px; }   /* volume sempre na linha de baixo: igual em todos os cards */
+  .grade .brand .sep { display: none; }
+  .grade .name { margin-top: 4px; font-size: 18px; }
+  .grade .cond { justify-content: center; margin-top: 7px; }
+  .grade .cond span { font-size: 10.5px; padding: 3px 7px 2px; }
+  .grade .de { margin-top: auto; padding-top: 10px; text-align: center; font-size: 13px; }   /* preço sempre no pé do card */
+  .grade .de i { font-size: 13px; }
+  .grade .por { justify-content: center; }
+  .grade .por i, .grade .lead { display: none; }
+  .grade .price { font-size: 30px; }
+  .grade .save { margin-top: 4px; text-align: center; font-size: 12.5px; }
+  .grade .save span { font-size: 10.5px; letter-spacing: 0.12em; }
+  .grade .seal { width: 46px; height: 46px; top: -6px; right: -6px; }
+  .grade .seal b { font-size: 17px; }
+  .grade .seal b em { font-size: 11px; }
+  .grade .seal span { font-size: 10.5px; }
+  .grade .stamp { font-size: 12px; padding: 6px 10px 5px; }
+  .grade .foot { max-width: 620px; margin-left: auto; margin-right: auto; }
+  @media (max-width: 460px) {
+    .grade .painel section { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .grade .item, .grade .item + .item { padding: 9px 8px 11px; }
+    .grade .brand { font-size: 10px; letter-spacing: 0.08em; }
+    .grade .name { font-size: 16px; }
+    .grade .cond span { font-size: 9.5px; letter-spacing: 0.04em; padding: 3px 5px 2px; }
+    .grade .price { font-size: 25px; }
+    .grade .save { font-size: 11.5px; }
+    .grade .save span { font-size: 9.5px; letter-spacing: 0.08em; }
+    .grade .seal { width: 40px; height: 40px; top: -5px; right: -5px; }
+    .grade .seal b { font-size: 15px; }
+    .grade .seal span { font-size: 9.5px; }
+    .grade .stamp { font-size: 10.5px; padding: 5px 8px 4px; }
+  }
 </style>
 </head>
 <body>
@@ -953,7 +1012,7 @@
     <feColorMatrix type="matrix" values="1.03 0 0 0 0  0 1.03 0 0 0  0 0 1.03 0 0  0 0 0 1 0"/>
   </filter>
 </svg>
-<main class="page">
+<main class="page grade">
   <div class="carta">
 
     <header class="head">
