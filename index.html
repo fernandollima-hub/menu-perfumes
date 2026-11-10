@@ -871,7 +871,8 @@
   @media (max-height: 520px) {
     .lb { gap: 10px; padding: 14px 68px; }
     .lb-corpo, .lb-col { gap: 10px; }
-    .lb-quadro img { max-height: calc(100vh - 60px); max-height: calc(100dvh - 60px); }
+    .lb-quadro img,
+    .lb.tem-perfil .lb-quadro img { max-height: calc(100vh - 60px); max-height: calc(100dvh - 60px); }   /* deitado: a foto usa a altura toda, com ou sem resumo */
     .lb-col { flex-direction: row; align-items: center; gap: 22px; }   /* deitado: legenda, preço e botão do lado da foto */
     .lb-cap .name { font-size: 19px; margin-top: 2px; }
     .lb-cap .cond { margin-top: 5px; }
@@ -1711,10 +1712,15 @@
     document.querySelectorAll('.item').forEach(function (item) {
       var wrap = item.querySelector('.frame-wrap'), img = wrap && wrap.querySelector('.frame img');
       if (!img) return;
-      var nome = item.querySelector('.name');
       item.setAttribute('role', 'button');
       item.tabIndex = 0;
-      item.setAttribute('aria-label', 'Ver detalhes e comprar' + (nome ? ': ' + nome.textContent : ''));
+      // o nome acessível do card tem tudo o que o card mostra (o aria-label substitui o texto de dentro)
+      var partes = [texto(item.querySelector('.name')), texto(item.querySelector('.brand'))];
+      var cnd = texto(item.querySelector('.cond')); if (cnd) partes.push(cnd);
+      var deTx = texto(item.querySelector('.de s')), prTx = item.querySelector('.price') ? texto(item.querySelector('.price')).replace(/^R\$\s*/, 'R$ ') : '';
+      if (prTx) partes.push((deTx ? 'de ' + deTx + ' ' : '') + 'por ' + prTx);
+      if (item.classList.contains('esgotado')) partes.push('esgotado');
+      item.setAttribute('aria-label', 'Ver detalhes' + (item.classList.contains('esgotado') ? '' : ' e comprar') + ': ' + partes.filter(Boolean).join(', '));
       item.addEventListener('click', function () { abrir(wrap); });
       item.addEventListener('keydown', function (e) { if (e.target === item && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); abrir(wrap); } });
     });
